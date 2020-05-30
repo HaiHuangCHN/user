@@ -1,0 +1,33 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>Login</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<link rel="stylesheet" type="text/css" href="../static/css/style.css" th:href="@{/css/style.css}" />
+</head>
+<body>
+	<div class="page">
+
+		<h2>Swagger Login</h2>
+
+		<form action="#" th:action="@{/common/login/page}" th:object="${loginReq}" method="post">
+			<dl>
+				<dt>Username:</dt>
+				<dd>
+					<input type="text" th:field="*{username}" />
+				</dd>
+				<dd th:if="${#fields.hasErrors('username')}" th:errors="*{username}">Username Error</dd>
+				<dt>Password:</dt>
+				<dd>
+					<input type="password" th:field="*{password}" />
+				</dd>
+				<dd th:if="${#fields.hasErrors('password')}" th:errors="*{password}">Password Error</dd>
+				<dd>
+					<input type="submit" value="Login" />
+				</dd>
+			</dl>
+		</form>
+
+	</div>
+</body>
+</html>
