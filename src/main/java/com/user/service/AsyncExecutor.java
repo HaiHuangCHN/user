@@ -27,7 +27,7 @@ public class AsyncExecutor {
     private UserArchRepository userArchRepository;
 
     @Autowired
-    EntityManager entityManager;
+    private EntityManager entityManager;
 
     // TODO why final???
     private ExecutorService executor;

@@ -237,7 +237,7 @@ public class UserService {
         return true;
     }
 
-    @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.READ_COMMITTED, rollbackFor = Exception.class)
+    @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.REPEATABLE_READ, rollbackFor = Exception.class)
     public void archiveDataAsync() throws InterruptedException, ExecutionException {
         asyncExecutor.setExecutor(Executors.newFixedThreadPool(10));
         Timestamp timestamp = new Timestamp(System.currentTimeMillis() - 3600000);
