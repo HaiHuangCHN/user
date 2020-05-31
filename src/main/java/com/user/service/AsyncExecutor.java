@@ -7,8 +7,6 @@ import java.util.concurrent.Future;
 import javax.persistence.EntityManager;
 
 import org.modelmapper.ModelMapper;
-import org.modelmapper.config.Configuration;
-import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -29,7 +27,6 @@ public class AsyncExecutor {
     @Autowired
     private EntityManager entityManager;
 
-    // TODO why final???
     private ExecutorService executor;
 
     public AsyncExecutor() {
@@ -52,6 +49,7 @@ public class AsyncExecutor {
             for (int count = 0; count < deletedUserList.size(); count++) {
                 UserArch userArch = modelMapper.map(deletedUserList.get(count), UserArch.class);
                 userArchRepository.save(userArch);
+                userArchRepository.flush();
                 userRepository.delete(deletedUserList.get(count));
                 userRepository.flush();
             }
