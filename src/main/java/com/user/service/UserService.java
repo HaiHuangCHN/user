@@ -243,7 +243,7 @@ public class UserService {
         asyncExecutor.setExecutor(Executors.newFixedThreadPool(10));
         ModelMapper modelMapper = new ModelMapper();
         modelMapper.getConfiguration().setFieldMatchingEnabled(true).setFieldAccessLevel(Configuration.AccessLevel.PRIVATE).setMatchingStrategy(MatchingStrategies.STANDARD);
-        Timestamp timestamp = new Timestamp(System.currentTimeMillis() - 3600000);
+        Timestamp timestamp = new Timestamp(System.currentTimeMillis() - 0);
         List<User> deletedTotalUserList = userRepository.findByUpdatedAtBefore(timestamp);
         List<Future<Boolean>> resultList = new LinkedList<>();
         for (int i = 1; i <= deletedTotalUserList.size() / 100; i++) {
@@ -258,7 +258,7 @@ public class UserService {
                 Thread.sleep(10000);
             }
 //            if (r.isDone()) {
-//                logger.info(r.get().toString());
+//                r.get();
 //            }
         }
     }
