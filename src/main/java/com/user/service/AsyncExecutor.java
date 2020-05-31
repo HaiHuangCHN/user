@@ -52,7 +52,10 @@ public class AsyncExecutor {
                 userArchRepository.flush();
                 userRepository.delete(deletedUserList.get(count));
                 userRepository.flush();
-                entityManager.flush(); // TODO why not able to achieve this
+                // TODO why not able to achieve this
+                // TODO error detail: No EntityManager with actual transaction available for
+                // current thread
+                entityManager.flush();
             }
             entityManager.clear();
             return true;

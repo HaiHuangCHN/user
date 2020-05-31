@@ -244,7 +244,7 @@ public class UserService {
         ModelMapper modelMapper = new ModelMapper();
         modelMapper.getConfiguration().setFieldMatchingEnabled(true).setFieldAccessLevel(Configuration.AccessLevel.PRIVATE).setMatchingStrategy(MatchingStrategies.STANDARD);
         Timestamp timestamp = new Timestamp(System.currentTimeMillis() - 3600000);
-        List<User> deletedTotalUserList = userRepository.findTop10000ByUpdatedAtBefore(timestamp);
+        List<User> deletedTotalUserList = userRepository.findByUpdatedAtBefore(timestamp);
         List<Future<Boolean>> resultList = new LinkedList<>();
         for (int i = 1; i <= deletedTotalUserList.size() / 100; i++) {
             // TODO how to handle when exception?
@@ -257,35 +257,39 @@ public class UserService {
                 logger.info("Processing......");
                 Thread.sleep(10000);
             }
-            if (r.isDone()) {
-                logger.info(r.get().toString());
-            }
-        }
-    }
-
-//    @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.READ_UNCOMMITTED, rollbackFor = Exception.class)
-//    public void archiveDataAsyncBatch() throws InterruptedException, ExecutionException {
-//        asyncExecutor.setExecutor(Executors.newFixedThreadPool(10));
-//        ModelMapper modelMapper = new ModelMapper();
-//        modelMapper.getConfiguration().setFieldMatchingEnabled(true).setFieldAccessLevel(Configuration.AccessLevel.PRIVATE).setMatchingStrategy(MatchingStrategies.STANDARD);
-//        Timestamp timestamp = new Timestamp(System.currentTimeMillis() - 3600000);
-//        List<User> deletedTotalUserList = userRepository.findByUpdatedAtBefore(timestamp);
-//        List<Future<Boolean>> resultList = new LinkedList<>();
-//        for (int i = 1; i <= deletedTotalUserList.size() / 100; i++) {
-//            Future<Boolean> result = asyncExecutor.archiveDataAsyc(deletedTotalUserList.subList(((i - 1) * 100), (i * 100)), modelMapper);
-//            resultList.add(result);
-//        }
-//        logger.info(String.valueOf(resultList.size()));
-//        for (Future<Boolean> r : resultList) {
-//            while (!r.isDone()) {
-//                logger.info("Processing......");
-//                Thread.sleep(10000);
-//            }
 //            if (r.isDone()) {
 //                logger.info(r.get().toString());
 //            }
-//        }
-//    }
+        }
+    }
+
+    @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.READ_UNCOMMITTED, rollbackFor = Exception.class)
+    public void archiveDataAsyncBatch() throws InterruptedException, ExecutionException {
+        asyncExecutor.setExecutor(Executors.newFixedThreadPool(10));
+        ModelMapper modelMapper = new ModelMapper();
+        modelMapper.getConfiguration().setFieldMatchingEnabled(true).setFieldAccessLevel(Configuration.AccessLevel.PRIVATE).setMatchingStrategy(MatchingStrategies.STANDARD);
+        Timestamp timestamp = new Timestamp(System.currentTimeMillis() - 3600000);
+        List<Future<Boolean>> resultList = new LinkedList<>();
+        boolean needFurtherProcessed = false;
+        do {
+            needFurtherProcessed = false;
+            List<User> deletedTotalUserList = userRepository.findTop10000ByUpdatedAtBefore(timestamp);
+            for (int i = 1; i <= deletedTotalUserList.size() / 100; i++) {
+                Future<Boolean> result = asyncExecutor.archiveDataAsyc(deletedTotalUserList.subList(((i - 1) * 100), (i * 100)), modelMapper);
+                resultList.add(result);
+            }
+            logger.info(String.valueOf(resultList.size()));
+            for (Future<Boolean> r : resultList) {
+                while (!r.isDone()) {
+                    logger.info("Processing......");
+                    Thread.sleep(10000);
+                }
+                if (r.isDone()) {
+                    logger.info(r.get().toString());
+                }
+            }
+        } while (needFurtherProcessed);
+    }
 
     @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.READ_COMMITTED, rollbackFor = Exception.class)
     public boolean insertData(long count) {
