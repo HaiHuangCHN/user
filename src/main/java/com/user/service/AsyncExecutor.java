@@ -47,20 +47,15 @@ public class AsyncExecutor {
         this.executor = executor;
     }
 
-    public Future<Boolean> archiveDataAsyc(List<User> deletedUserList) {
-        ModelMapper modelMapper = new ModelMapper();
-        modelMapper.getConfiguration().setFieldMatchingEnabled(true).setFieldAccessLevel(Configuration.AccessLevel.PRIVATE).setMatchingStrategy(MatchingStrategies.STANDARD);
-
+    public Future<Boolean> archiveDataAsyc(List<User> deletedUserList, ModelMapper modelMapper) {
         return executor.submit(() -> {
             for (int count = 0; count < deletedUserList.size(); count++) {
                 UserArch userArch = modelMapper.map(deletedUserList.get(count), UserArch.class);
-                userArchRepository.saveAndFlush(userArch);
-                if (count > 0 && count % 100 == 0) {
-                    entityManager.clear();
-                }
+                userArchRepository.save(userArch);
+                userRepository.delete(deletedUserList.get(count));
+                userRepository.flush();
             }
-            userRepository.deleteAll(deletedUserList);
-            userRepository.flush();
+            entityManager.clear();
             return true;
         });
     }
