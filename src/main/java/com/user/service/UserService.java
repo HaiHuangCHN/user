@@ -205,7 +205,7 @@ public class UserService {
         }
     }
 
-    @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.READ_COMMITTED, rollbackFor = Exception.class)
+    @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.READ_UNCOMMITTED, rollbackFor = Exception.class)
     public boolean archiveData() {
 //        long start = System.currentTimeMillis();
         ModelMapper modelMapper = new ModelMapper();
@@ -221,12 +221,10 @@ public class UserService {
             for (int count = 0; count < deletedUserList.size(); count++) {
                 UserArch userArch = modelMapper.map(deletedUserList.get(count), UserArch.class);
                 userArchRepository.save(userArch);
+                userRepository.delete(deletedUserList.get(count));
                 entityManager.flush();
-                if (count > 0 && count % 100 == 0) {
-                    entityManager.clear();
-                }
             }
-            userRepository.deleteAll(deletedUserList);
+            entityManager.clear();
         } while (userRepository.findTop10000ByUpdatedAtBefore(timestamp).size() != 0);
 //        long saveEnd = System.currentTimeMillis();
 //        long end = System.currentTimeMillis();
@@ -237,7 +235,7 @@ public class UserService {
         return true;
     }
 
-    @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.REPEATABLE_READ, rollbackFor = Exception.class)
+    @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.READ_UNCOMMITTED, rollbackFor = Exception.class)
     public void archiveDataAsync() throws InterruptedException, ExecutionException {
         asyncExecutor.setExecutor(Executors.newFixedThreadPool(10));
         Timestamp timestamp = new Timestamp(System.currentTimeMillis() - 3600000);
