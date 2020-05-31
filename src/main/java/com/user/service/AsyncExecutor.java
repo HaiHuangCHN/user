@@ -52,6 +52,7 @@ public class AsyncExecutor {
                 userArchRepository.flush();
                 userRepository.delete(deletedUserList.get(count));
                 userRepository.flush();
+                entityManager.flush(); // TODO why not able to achieve this
             }
             entityManager.clear();
             return true;
