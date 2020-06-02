@@ -29,8 +29,8 @@ public class TestController {
     @RequestMapping(value = "/archive/data", method = RequestMethod.GET)
     public ResponseEntity<String> archiveData() throws InterruptedException, ExecutionException {
         long start = System.currentTimeMillis();
-//      userService.archiveData();
-        userService.archiveDataAsync();
+        userService.archiveData();
+//        userService.archiveDataAsync();
         long end = System.currentTimeMillis();
         logger.info("Total Duration: " + (end - start));
         return ResponseEntity.status(HttpStatus.SC_OK).body("End");

@@ -78,10 +78,10 @@ public class UserService {
     private UserDataProvider userDataProvider;
 
     @Autowired
-    EntityManager entityManager;
+    private EntityManager entityManager;
 
     @Autowired
-    AsyncExecutor asyncExecutor;
+    private AsyncExecutor asyncExecutor;
 
     public void validateInboundRequest(Errors errors) throws InputParameterException {
         if (errors.hasErrors()) {
@@ -238,7 +238,7 @@ public class UserService {
         return true;
     }
 
-    @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.READ_UNCOMMITTED, rollbackFor = Exception.class)
+//    @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.READ_UNCOMMITTED, rollbackFor = Exception.class) // TODO actually no meanning at all
     public void archiveDataAsync() throws InterruptedException, ExecutionException {
         asyncExecutor.setExecutor(Executors.newFixedThreadPool(10));
         ModelMapper modelMapper = new ModelMapper();
@@ -257,18 +257,16 @@ public class UserService {
                 logger.info("Processing......");
                 Thread.sleep(10000);
             }
+            r.get(); // TODO block logger.info("Processing......");?
 //            if (r.isDone()) {
 //                r.get();
 //            }
         }
     }
 
-    @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.READ_UNCOMMITTED, rollbackFor = Exception.class)
     public void archiveDataAsyncBatch() throws InterruptedException, ExecutionException {
-        asyncExecutor.setExecutor(Executors.newFixedThreadPool(10));
         ModelMapper modelMapper = new ModelMapper();
         modelMapper.getConfiguration().setFieldMatchingEnabled(true).setFieldAccessLevel(Configuration.AccessLevel.PRIVATE).setMatchingStrategy(MatchingStrategies.STANDARD);
-        Timestamp timestamp = new Timestamp(System.currentTimeMillis() - 3600000);
         List<Future<Boolean>> resultList = new LinkedList<>();
         boolean needFurtherProcessed = false;
         do {
