@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
@@ -269,11 +270,9 @@ public class UserService {
         modelMapper.getConfiguration().setFieldMatchingEnabled(true).setFieldAccessLevel(Configuration.AccessLevel.PRIVATE).setMatchingStrategy(MatchingStrategies.STANDARD);
         Timestamp timestamp = new Timestamp(System.currentTimeMillis() - 0);
         List<Future<Boolean>> resultList = new LinkedList<>();
-        boolean needFurtherProcessed = false;
         List<User> deletedTotalUserList = userRepository.findByUpdatedAtBefore(timestamp);
-        List<Future<Boolean>> resultList = new LinkedList<>();
         for (int i = 1; i <= deletedTotalUserList.size() / 100; i++) {
-            Future<Boolean> result = asyncExecutor.archiveDataAsyc(deletedTotalUserList.subList(((i - 1) * 100), (i * 100)), modelMapper);
+            Future<Boolean> result = test(deletedTotalUserList.subList(((i - 1) * 100), (i * 100)), modelMapper);
             resultList.add(result);
         }
         logger.info(String.valueOf(resultList.size()));
@@ -282,11 +281,25 @@ public class UserService {
                 logger.info("Processing......");
                 Thread.sleep(10000);
             }
-            r.get(); // TODO block logger.info("Processing......");?
+//            r.get(); // TODO block logger.info("Processing......");?
 //            if (r.isDone()) {
 //                r.get();
 //            }
         }
+    }
+
+    public CompletableFuture<Boolean> test(List<User> deletedUserList, ModelMapper modelMapper) {
+        return CompletableFuture.supplyAsync(() -> {
+            for (int count = 0; count < deletedUserList.size(); count++) {
+                UserArch userArch = modelMapper.map(deletedUserList.get(count), UserArch.class);
+                userArchRepository.save(userArch);
+                userArchRepository.flush();
+                userRepository.delete(deletedUserList.get(count));
+                userRepository.flush();
+            }
+            entityManager.clear();
+            return true;
+        });
     }
 
     @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.READ_COMMITTED, rollbackFor = Exception.class)
