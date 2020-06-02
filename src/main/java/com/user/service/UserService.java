@@ -257,36 +257,36 @@ public class UserService {
                 logger.info("Processing......");
                 Thread.sleep(10000);
             }
-            r.get(); // TODO block logger.info("Processing......");?
+//            r.get(); // TODO block logger.info("Processing......");?
 //            if (r.isDone()) {
 //                r.get();
 //            }
         }
     }
 
-    public void archiveDataAsyncBatch() throws InterruptedException, ExecutionException {
+    public void archiveDataAsyncCompletableFuture() throws InterruptedException, ExecutionException {
         ModelMapper modelMapper = new ModelMapper();
         modelMapper.getConfiguration().setFieldMatchingEnabled(true).setFieldAccessLevel(Configuration.AccessLevel.PRIVATE).setMatchingStrategy(MatchingStrategies.STANDARD);
+        Timestamp timestamp = new Timestamp(System.currentTimeMillis() - 0);
         List<Future<Boolean>> resultList = new LinkedList<>();
         boolean needFurtherProcessed = false;
-        do {
-            needFurtherProcessed = false;
-            List<User> deletedTotalUserList = userRepository.findTop10000ByUpdatedAtBefore(timestamp);
-            for (int i = 1; i <= deletedTotalUserList.size() / 100; i++) {
-                Future<Boolean> result = asyncExecutor.archiveDataAsyc(deletedTotalUserList.subList(((i - 1) * 100), (i * 100)), modelMapper);
-                resultList.add(result);
+        List<User> deletedTotalUserList = userRepository.findByUpdatedAtBefore(timestamp);
+        List<Future<Boolean>> resultList = new LinkedList<>();
+        for (int i = 1; i <= deletedTotalUserList.size() / 100; i++) {
+            Future<Boolean> result = asyncExecutor.archiveDataAsyc(deletedTotalUserList.subList(((i - 1) * 100), (i * 100)), modelMapper);
+            resultList.add(result);
+        }
+        logger.info(String.valueOf(resultList.size()));
+        for (Future<Boolean> r : resultList) {
+            while (!r.isDone()) {
+                logger.info("Processing......");
+                Thread.sleep(10000);
             }
-            logger.info(String.valueOf(resultList.size()));
-            for (Future<Boolean> r : resultList) {
-                while (!r.isDone()) {
-                    logger.info("Processing......");
-                    Thread.sleep(10000);
-                }
-                if (r.isDone()) {
-                    logger.info(r.get().toString());
-                }
-            }
-        } while (needFurtherProcessed);
+            r.get(); // TODO block logger.info("Processing......");?
+//            if (r.isDone()) {
+//                r.get();
+//            }
+        }
     }
 
     @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.READ_COMMITTED, rollbackFor = Exception.class)
