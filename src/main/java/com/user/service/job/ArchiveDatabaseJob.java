@@ -98,12 +98,12 @@ public class ArchiveDatabaseJob {
     }
 
 //    @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.READ_UNCOMMITTED, rollbackFor = Exception.class) // TODO actually no meanning at all
-    public void archiveDataAsyncFuture() throws InterruptedException, ExecutionException {
+    public void archiveDataAsyncFutureSpring() {
+        asyncExecutor.setExecutor(Executors.newFixedThreadPool(10));
         ModelMapper modelMapper = new ModelMapper();
         modelMapper.getConfiguration().setFieldMatchingEnabled(true).setFieldAccessLevel(Configuration.AccessLevel.PRIVATE).setMatchingStrategy(MatchingStrategies.STANDARD);
         Timestamp timestamp = new Timestamp(System.currentTimeMillis() - 0);
         List<User> deletedTotalUserList = userRepository.findByUpdatedAtBefore(timestamp);
-        List<Future<Boolean>> resultList = new LinkedList<>();
         for (int i = 1; i <= deletedTotalUserList.size() / 100; i++) {
             // TODO how to handle when exception?
             asyncExecutor.archiveDataAsyc(deletedTotalUserList.subList(((i - 1) * 100), (i * 100)), modelMapper);
@@ -111,7 +111,7 @@ public class ArchiveDatabaseJob {
     }
 
 //  @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.READ_UNCOMMITTED, rollbackFor = Exception.class) // TODO actually no meanning at all
-    public void archiveDataAsyncFutureSpring() throws InterruptedException, ExecutionException {
+    public void archiveDataAsyncFuture() throws InterruptedException, ExecutionException {
         ModelMapper modelMapper = new ModelMapper();
         modelMapper.getConfiguration().setFieldMatchingEnabled(true).setFieldAccessLevel(Configuration.AccessLevel.PRIVATE).setMatchingStrategy(MatchingStrategies.STANDARD);
         Timestamp timestamp = new Timestamp(System.currentTimeMillis() - 0);

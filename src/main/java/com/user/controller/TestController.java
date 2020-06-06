@@ -77,7 +77,8 @@ public class TestController {
         long start = System.currentTimeMillis();
 //        archiveDatabaseJob.archiveData();
 //        archiveDatabaseJob.archiveDataAsyncFuture();
-        archiveDatabaseJob.archiveDataAsyncCompletableFuture();
+//        archiveDatabaseJob.archiveDataAsyncCompletableFuture();
+      archiveDatabaseJob.archiveDataAsyncFutureSpring();
         long end = System.currentTimeMillis();
         logger.info("Total Duration: " + (end - start));
         return ResponseEntity.status(HttpStatus.SC_OK).body("End");
