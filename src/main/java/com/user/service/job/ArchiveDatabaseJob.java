@@ -98,7 +98,7 @@ public class ArchiveDatabaseJob {
     }
 
 //    @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.READ_UNCOMMITTED, rollbackFor = Exception.class) // TODO actually no meanning at all
-    public void archiveDataAsync() throws InterruptedException, ExecutionException {
+    public void archiveDataAsyncFuture() throws InterruptedException, ExecutionException {
         asyncExecutor.setExecutor(Executors.newFixedThreadPool(10));
         ModelMapper modelMapper = new ModelMapper();
         modelMapper.getConfiguration().setFieldMatchingEnabled(true).setFieldAccessLevel(Configuration.AccessLevel.PRIVATE).setMatchingStrategy(MatchingStrategies.STANDARD);
