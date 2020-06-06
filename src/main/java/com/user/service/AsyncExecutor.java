@@ -10,9 +10,8 @@ import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Isolation;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.user.dao.entity.User;
@@ -34,6 +33,7 @@ public class AsyncExecutor {
     @Autowired
     private EntityManager entityManager;
 
+    // TODO change it into final
     private ExecutorService executor;
 
     public AsyncExecutor() {
@@ -51,9 +51,10 @@ public class AsyncExecutor {
         this.executor = executor;
     }
 
-    @Transactional // TODO how set up transaction?
-    public Future<Boolean> archiveDataAsyc(List<User> deletedUserList, ModelMapper modelMapper) {
-        return executor.submit(() -> {
+    @Async
+//    @Transactional // TODO how set up transaction?
+    public void archiveDataAsyc(List<User> deletedUserList, ModelMapper modelMapper) {
+        executor.submit(() -> {
             for (int count = 0; count < deletedUserList.size(); count++) {
                 UserArch userArch = modelMapper.map(deletedUserList.get(count), UserArch.class);
                 userArchRepository.save(userArch);
@@ -66,7 +67,6 @@ public class AsyncExecutor {
 //                entityManager.flush();
             }
             entityManager.clear();
-            return true;
         });
     }
 }

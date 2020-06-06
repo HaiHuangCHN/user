@@ -106,6 +106,19 @@ public class ArchiveDatabaseJob {
         List<Future<Boolean>> resultList = new LinkedList<>();
         for (int i = 1; i <= deletedTotalUserList.size() / 100; i++) {
             // TODO how to handle when exception?
+            asyncExecutor.archiveDataAsyc(deletedTotalUserList.subList(((i - 1) * 100), (i * 100)), modelMapper);
+        }
+    }
+
+//  @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.READ_UNCOMMITTED, rollbackFor = Exception.class) // TODO actually no meanning at all
+    public void archiveDataAsyncFutureSpring() throws InterruptedException, ExecutionException {
+        ModelMapper modelMapper = new ModelMapper();
+        modelMapper.getConfiguration().setFieldMatchingEnabled(true).setFieldAccessLevel(Configuration.AccessLevel.PRIVATE).setMatchingStrategy(MatchingStrategies.STANDARD);
+        Timestamp timestamp = new Timestamp(System.currentTimeMillis() - 0);
+        List<User> deletedTotalUserList = userRepository.findByUpdatedAtBefore(timestamp);
+        List<Future<Boolean>> resultList = new LinkedList<>();
+        for (int i = 1; i <= deletedTotalUserList.size() / 100; i++) {
+            // TODO how to handle when exception?
             Future<Boolean> result = archiveDataAsyc(deletedTotalUserList.subList(((i - 1) * 100), (i * 100)), modelMapper);
             resultList.add(result);
         }
@@ -115,14 +128,14 @@ public class ArchiveDatabaseJob {
                 logger.info("Processing......");
                 Thread.sleep(10000);
             }
-//            r.get(); // TODO block logger.info("Processing......");?
-//            if (r.isDone()) {
-//                r.get();
-//            }
+//          r.get(); // TODO block logger.info("Processing......");?
+//          if (r.isDone()) {
+//              r.get();
+//          }
         }
     }
 
-    @Transactional // TODO how set up transaction?
+//    @Transactional // TODO how set up transaction?
     public Future<Boolean> archiveDataAsyc(List<User> deletedUserList, ModelMapper modelMapper) {
         return Executors.newFixedThreadPool(10).submit(() -> {
             for (int count = 0; count < deletedUserList.size(); count++) {
@@ -152,7 +165,7 @@ public class ArchiveDatabaseJob {
             resultList.add(result);
         }
         logger.info(String.valueOf(resultList.size()));
-        CompletableFuture.allOf(resultList.toArray(new CompletableFuture[resultList.size()])).join();
+//        CompletableFuture.allOf(resultList.toArray(new CompletableFuture[resultList.size()]));
 //        for (Future<Boolean> r : resultList) {
 ////            while (!r.isDone()) {
 ////                logger.info("Processing......");
@@ -165,7 +178,7 @@ public class ArchiveDatabaseJob {
 //        }
     }
 
-    @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.READ_UNCOMMITTED, rollbackFor = Exception.class) // TODO actually no meanning at all
+//    @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.READ_UNCOMMITTED, rollbackFor = Exception.class) // TODO actually no meanning at all
     public CompletableFuture<Boolean> test(List<User> deletedUserList, ModelMapper modelMapper) {
         return CompletableFuture.supplyAsync(() -> {
             for (int count = 0; count < deletedUserList.size(); count++) {
