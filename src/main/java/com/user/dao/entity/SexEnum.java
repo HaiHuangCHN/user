@@ -1,4 +1,4 @@
-package com.user.entity;
+package com.user.dao.entity;
 
 public enum SexEnum {
     MALE, FEMALE, UNKNOWN;

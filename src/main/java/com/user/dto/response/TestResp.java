@@ -1,4 +1,4 @@
-package com.user.response;
+package com.user.dto.response;
 
 public class TestResp extends AddressResp {
 	private String field1;

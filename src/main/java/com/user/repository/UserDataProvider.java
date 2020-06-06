@@ -11,7 +11,7 @@ import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.user.entity.User;
+import com.user.dao.entity.User;
 import com.user.service.UserService;
 import com.user.util.RedisCacheUtil;
 

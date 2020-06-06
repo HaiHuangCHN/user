@@ -16,9 +16,9 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.Claim;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.user.costants.ErrorCodeEnum;
+import com.user.dto.response.ProfileInfo;
+import com.user.dto.response.ProfileResp;
 import com.user.exception.TokenException;
-import com.user.response.ProfileInfo;
-import com.user.response.ProfileResp;
 
 /** Token's encode and decode */
 //@Configuration

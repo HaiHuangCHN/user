@@ -17,11 +17,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.user.costants.Constants;
+import com.user.dto.request.AddUserReq;
+import com.user.dto.request.LoginReq;
+import com.user.dto.response.ProfileResp;
 import com.user.exception.ErrorResponseException;
 import com.user.exception.InputParameterException;
-import com.user.request.AddUserReq;
-import com.user.request.LoginReq;
-import com.user.response.ProfileResp;
 import com.user.service.UserService;
 
 import io.swagger.annotations.Api;

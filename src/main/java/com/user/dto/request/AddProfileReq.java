@@ -1,4 +1,4 @@
-package com.user.request;
+package com.user.dto.request;
 
 import java.util.List;
 

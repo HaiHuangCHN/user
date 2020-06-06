@@ -1,12 +1,10 @@
-package com.user.entity;
+package com.user.dao.entity;
 
 import java.io.Serializable;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -14,8 +12,8 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
 @Entity
-@Table(name = "address", schema = "user")
-public class Address extends BaseEntity implements Serializable {
+@Table(name = "address_arch", schema = "shopping")
+public class AddressArch extends BaseEntity implements Serializable {
 
     /**
      * 
@@ -23,8 +21,8 @@ public class Address extends BaseEntity implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "address_id", nullable = false)
+    @Column(name = "address_arch_id", nullable = false)
+    @NotNull(message = "address_id can not be null")
     private Integer addressId;
 
     @Column(name = "country")
@@ -40,21 +38,16 @@ public class Address extends BaseEntity implements Serializable {
     private String district;
 
     @Column(name = "detail_address")
-//    @Column(name = "detail_Address"), it works
-//    @Column(name = "detailAddress"), it works
-//    @Column(name = "DETAIL_ADDRESS"), it works (it is no matter whether it is written in upper case or lower case)
     private String detailAddress;
 
     @Column(name = "postcode")
     private String postcode;
 
-//    @Column(s) not allowed on a @ManyToOne property
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "profile_id", referencedColumnName = "profile_id", nullable = false)
-    @NotNull(message = "profile can not be null")
-    private Profile profile;
+    @JoinColumn(name = "profile_arch_id", referencedColumnName = "profile_arch_id", nullable = false)
+    private ProfileArch profile;
 
-    public Address() {
+    public AddressArch() {
         super();
     }
 
@@ -114,17 +107,17 @@ public class Address extends BaseEntity implements Serializable {
         this.postcode = postcode;
     }
 
-    public Profile getProfile() {
+    public ProfileArch getProfile() {
         return profile;
     }
 
-    public void setProfile(Profile profile) {
+    public void setProfile(ProfileArch profile) {
         this.profile = profile;
     }
 
     @Override
     public String toString() {
-        return "Address [addressId=" + addressId + ", country=" + country + ", provience=" + provience + ", city=" + city + ", district=" + district + ", detailAddress="
+        return "AddressArch [addressId=" + addressId + ", country=" + country + ", provience=" + provience + ", city=" + city + ", district=" + district + ", detailAddress="
                 + detailAddress + ", postcode=" + postcode + ", profile=" + profile + "]";
     }
 

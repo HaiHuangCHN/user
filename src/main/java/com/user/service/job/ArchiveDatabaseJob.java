@@ -21,8 +21,8 @@ import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.user.entity.User;
-import com.user.entity.UserArch;
+import com.user.dao.entity.User;
+import com.user.dao.entity.UserArch;
 import com.user.repository.AddressArchRepository;
 import com.user.repository.AddressRepository;
 import com.user.repository.ProfileArchRepository;

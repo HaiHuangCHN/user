@@ -1,4 +1,4 @@
-package com.user.response;
+package com.user.dto.response;
 
 import io.swagger.annotations.ApiModel;
 

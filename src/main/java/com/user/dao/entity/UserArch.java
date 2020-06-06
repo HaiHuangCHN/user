@@ -1,4 +1,4 @@
-package com.user.entity;
+package com.user.dao.entity;
 
 import java.io.Serializable;
 
