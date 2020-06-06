@@ -194,49 +194,5 @@ public class UserService {
         }
     }
 
-    @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.READ_COMMITTED, rollbackFor = Exception.class)
-    public boolean insertData(long count) {
-        Timestamp timestamp = new Timestamp(System.currentTimeMillis() - 360000000L);
-        for (int i = 200001; i <= count; i++) {
-            User user = new User();
-            Profile profile = new Profile();
-            List<Address> addressList = new ArrayList<>();
-            user.setUsername(String.valueOf(i));
-            user.setPassword("password");
-            user.setCreatedAt(timestamp);
-            user.setUpdatedAt(timestamp);
-            user.setProfile(profile);
-            profile.setUser(user);
-            profile.setSex(SexEnum.MALE);
-            profile.setEmail("test@mail.com");
-            profile.setPhoneNum("12345678");
-            profile.setCreatedAt(timestamp);
-            profile.setUpdatedAt(timestamp);
-            Address addressDb = new Address();
-            addressDb.setProfile(profile);
-            addressDb.setCountry("test");
-            addressDb.setProvience("test");
-            addressDb.setCity("test");
-            addressDb.setDistrict("test");
-            addressDb.setDetailAddress("test");
-            addressDb.setPostcode("0000");
-            addressDb.setCreatedAt(timestamp);
-            addressDb.setUpdatedAt(timestamp);
-            addressList.add(addressDb);
-            profile.setAddressList(addressList);
-            userRepository.save(user);
-            profileRepository.save(user.getProfile());
-            addressRepository.saveAll(user.getProfile().getAddressList());
-            if (i % 100 == 0) {
-                entityManager.clear();
-            }
-        }
-        return true;
-    }
-
-    public long count() {
-        long count = profileRepository.countByEmail("test@mail.com");
-        return count;
-    }
 
 }

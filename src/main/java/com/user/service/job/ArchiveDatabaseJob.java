@@ -34,6 +34,7 @@ import com.user.service.AsyncExecutor;
 
 @Service
 public class ArchiveDatabaseJob {
+
     private static final Logger logger = LoggerFactory.getLogger(ArchiveDatabaseJob.class);
 
     @Autowired
