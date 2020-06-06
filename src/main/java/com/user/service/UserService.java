@@ -3,19 +3,11 @@ package com.user.service;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
 
 import javax.persistence.EntityManager;
 
 import org.hibernate.exception.ConstraintViolationException;
-import org.modelmapper.ModelMapper;
-import org.modelmapper.config.Configuration;
-import org.modelmapper.convention.MatchingStrategies;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,7 +24,6 @@ import com.user.entity.Address;
 import com.user.entity.Profile;
 import com.user.entity.SexEnum;
 import com.user.entity.User;
-import com.user.entity.UserArch;
 import com.user.exception.ErrorResponseException;
 import com.user.exception.InputParameterException;
 import com.user.repository.AddressArchRepository;
@@ -80,9 +71,6 @@ public class UserService {
 
     @Autowired
     private EntityManager entityManager;
-
-    @Autowired
-    private AsyncExecutor asyncExecutor;
 
     public void validateInboundRequest(Errors errors) throws InputParameterException {
         if (errors.hasErrors()) {
@@ -204,102 +192,6 @@ public class UserService {
         } else {
             throw new ErrorResponseException(ErrorCodeEnum.INVALID_USER.getSelfDefinedCode(), ErrorCodeEnum.INVALID_USER.getMessage(), ErrorCodeEnum.INVALID_USER.getDetail());
         }
-    }
-
-    @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.READ_UNCOMMITTED, rollbackFor = Exception.class)
-    public boolean archiveData() {
-//        long start = System.currentTimeMillis();
-        ModelMapper modelMapper = new ModelMapper();
-        modelMapper.getConfiguration().setFieldMatchingEnabled(true).setFieldAccessLevel(Configuration.AccessLevel.PRIVATE).setMatchingStrategy(MatchingStrategies.STANDARD);
-        Timestamp timestamp = new Timestamp(System.currentTimeMillis() - 3600000);
-        List<User> deletedUserList = null;
-        boolean needFurtherProcessed = false;
-        do {
-//            List<User> deletedUserList = userRepository.deleteByUpdatedAtBefore(timestamp);
-//            List<User> deletedUserList = userRepository.findTop1ByUsername("0");
-            needFurtherProcessed = false;
-            deletedUserList = userRepository.findTop10000ByUpdatedAtBefore(timestamp);
-//            entityManager.clear();
-//            long saveStart = System.currentTimeMillis();
-            for (int count = 0; count < deletedUserList.size(); count++) {
-                needFurtherProcessed = true;
-                UserArch userArch = modelMapper.map(deletedUserList.get(count), UserArch.class);
-                userArchRepository.save(userArch);
-                userRepository.delete(deletedUserList.get(count));
-                entityManager.flush();
-            }
-            entityManager.clear();
-        } while (needFurtherProcessed);
-//        long saveEnd = System.currentTimeMillis();
-//        long end = System.currentTimeMillis();
-//        logger.info("Select: " + (saveStart - start));
-//        logger.info("Save: " + (saveEnd - saveStart));
-//        logger.info("Delete: " + (end - saveEnd));
-//        logger.info("Duration: " + (end - start));
-        return true;
-    }
-
-//    @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.READ_UNCOMMITTED, rollbackFor = Exception.class) // TODO actually no meanning at all
-    public void archiveDataAsync() throws InterruptedException, ExecutionException {
-        asyncExecutor.setExecutor(Executors.newFixedThreadPool(10));
-        ModelMapper modelMapper = new ModelMapper();
-        modelMapper.getConfiguration().setFieldMatchingEnabled(true).setFieldAccessLevel(Configuration.AccessLevel.PRIVATE).setMatchingStrategy(MatchingStrategies.STANDARD);
-        Timestamp timestamp = new Timestamp(System.currentTimeMillis() - 0);
-        List<User> deletedTotalUserList = userRepository.findByUpdatedAtBefore(timestamp);
-        List<Future<Boolean>> resultList = new LinkedList<>();
-        for (int i = 1; i <= deletedTotalUserList.size() / 100; i++) {
-            // TODO how to handle when exception?
-            Future<Boolean> result = asyncExecutor.archiveDataAsyc(deletedTotalUserList.subList(((i - 1) * 100), (i * 100)), modelMapper);
-            resultList.add(result);
-        }
-        logger.info(String.valueOf(resultList.size()));
-        for (Future<Boolean> r : resultList) {
-            while (!r.isDone()) {
-                logger.info("Processing......");
-                Thread.sleep(10000);
-            }
-//            r.get(); // TODO block logger.info("Processing......");?
-//            if (r.isDone()) {
-//                r.get();
-//            }
-        }
-    }
-
-    public void archiveDataAsyncCompletableFuture() throws InterruptedException, ExecutionException {
-        ModelMapper modelMapper = new ModelMapper();
-        modelMapper.getConfiguration().setFieldMatchingEnabled(true).setFieldAccessLevel(Configuration.AccessLevel.PRIVATE).setMatchingStrategy(MatchingStrategies.STANDARD);
-        Timestamp timestamp = new Timestamp(System.currentTimeMillis() - 0);
-        List<Future<Boolean>> resultList = new LinkedList<>();
-        List<User> deletedTotalUserList = userRepository.findByUpdatedAtBefore(timestamp);
-        for (int i = 1; i <= deletedTotalUserList.size() / 100; i++) {
-            Future<Boolean> result = test(deletedTotalUserList.subList(((i - 1) * 100), (i * 100)), modelMapper);
-            resultList.add(result);
-        }
-        logger.info(String.valueOf(resultList.size()));
-        for (Future<Boolean> r : resultList) {
-            while (!r.isDone()) {
-                logger.info("Processing......");
-                Thread.sleep(10000);
-            }
-//            r.get(); // TODO block logger.info("Processing......");?
-//            if (r.isDone()) {
-//                r.get();
-//            }
-        }
-    }
-
-    public CompletableFuture<Boolean> test(List<User> deletedUserList, ModelMapper modelMapper) {
-        return CompletableFuture.supplyAsync(() -> {
-            for (int count = 0; count < deletedUserList.size(); count++) {
-                UserArch userArch = modelMapper.map(deletedUserList.get(count), UserArch.class);
-                userArchRepository.save(userArch);
-                userArchRepository.flush();
-                userRepository.delete(deletedUserList.get(count));
-                userRepository.flush();
-            }
-            entityManager.clear();
-            return true;
-        });
     }
 
     @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.READ_COMMITTED, rollbackFor = Exception.class)
