@@ -99,7 +99,6 @@ public class ArchiveDatabaseJob {
 
 //    @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.READ_UNCOMMITTED, rollbackFor = Exception.class) // TODO actually no meanning at all
     public void archiveDataAsyncFuture() throws InterruptedException, ExecutionException {
-        asyncExecutor.setExecutor(Executors.newFixedThreadPool(10));
         ModelMapper modelMapper = new ModelMapper();
         modelMapper.getConfiguration().setFieldMatchingEnabled(true).setFieldAccessLevel(Configuration.AccessLevel.PRIVATE).setMatchingStrategy(MatchingStrategies.STANDARD);
         Timestamp timestamp = new Timestamp(System.currentTimeMillis() - 0);
@@ -107,7 +106,7 @@ public class ArchiveDatabaseJob {
         List<Future<Boolean>> resultList = new LinkedList<>();
         for (int i = 1; i <= deletedTotalUserList.size() / 100; i++) {
             // TODO how to handle when exception?
-            Future<Boolean> result = asyncExecutor.archiveDataAsyc(deletedTotalUserList.subList(((i - 1) * 100), (i * 100)), modelMapper);
+            Future<Boolean> result = archiveDataAsyc(deletedTotalUserList.subList(((i - 1) * 100), (i * 100)), modelMapper);
             resultList.add(result);
         }
         logger.info(String.valueOf(resultList.size()));
@@ -121,6 +120,25 @@ public class ArchiveDatabaseJob {
 //                r.get();
 //            }
         }
+    }
+
+    @Transactional // TODO how set up transaction?
+    public Future<Boolean> archiveDataAsyc(List<User> deletedUserList, ModelMapper modelMapper) {
+        return Executors.newFixedThreadPool(10).submit(() -> {
+            for (int count = 0; count < deletedUserList.size(); count++) {
+                UserArch userArch = modelMapper.map(deletedUserList.get(count), UserArch.class);
+                userArchRepository.save(userArch);
+                userArchRepository.flush();
+                userRepository.delete(deletedUserList.get(count));
+                userRepository.flush();
+//                // TODO why not able to achieve this
+//                // TODO error detail: No EntityManager with actual transaction available for
+//                // current thread
+//                entityManager.flush();
+            }
+            entityManager.clear();
+            return true;
+        });
     }
 
     public void archiveDataAsyncCompletableFuture() throws InterruptedException, ExecutionException {
