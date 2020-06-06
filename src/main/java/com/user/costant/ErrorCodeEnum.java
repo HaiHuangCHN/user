@@ -1,4 +1,4 @@
-package com.user.costants;
+package com.user.costant;
 
 public enum ErrorCodeEnum {
 	INVALID_USER(200, "PF_001", "Invalid user", ""),

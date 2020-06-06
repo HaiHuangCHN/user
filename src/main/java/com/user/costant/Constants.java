@@ -1,4 +1,4 @@
-package com.user.costants;
+package com.user.costant;
 
 public class Constants {
 

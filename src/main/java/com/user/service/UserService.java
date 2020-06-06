@@ -18,8 +18,8 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.Errors;
 
-import com.user.costants.Constants;
-import com.user.costants.ErrorCodeEnum;
+import com.user.costant.Constants;
+import com.user.costant.ErrorCodeEnum;
 import com.user.dao.entity.Address;
 import com.user.dao.entity.Profile;
 import com.user.dao.entity.SexEnum;
