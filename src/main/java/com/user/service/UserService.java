@@ -33,11 +33,9 @@ import com.user.dto.response.ProfileResp;
 import com.user.dto.response.TestResp;
 import com.user.exception.ErrorResponseException;
 import com.user.exception.InputParameterException;
-import com.user.repository.AddressArchRepository;
 import com.user.repository.AddressRepository;
 import com.user.repository.ProfileArchRepository;
 import com.user.repository.ProfileRepository;
-import com.user.repository.UserArchRepository;
 import com.user.repository.UserDataProvider;
 import com.user.repository.UserRepository;
 import com.user.util.JwtUtils;
@@ -52,9 +50,6 @@ public class UserService {
     private UserRepository userRepository;
 
     @Autowired
-    private UserArchRepository userArchRepository;
-
-    @Autowired
     private ProfileRepository profileRepository;
 
     @Autowired
@@ -62,9 +57,6 @@ public class UserService {
 
     @Autowired
     private AddressRepository addressRepository;
-
-    @Autowired
-    private AddressArchRepository addressArchRepository;
 
     @Autowired
     private UserDataProvider userDataProvider;
@@ -193,6 +185,5 @@ public class UserService {
             throw new ErrorResponseException(ErrorCodeEnum.INVALID_USER.getSelfDefinedCode(), ErrorCodeEnum.INVALID_USER.getMessage(), ErrorCodeEnum.INVALID_USER.getDetail());
         }
     }
-
 
 }
