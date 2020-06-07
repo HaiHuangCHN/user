@@ -31,7 +31,7 @@ import com.user.repository.ProfileRepository;
 import com.user.repository.UserArchRepository;
 import com.user.repository.UserDataProvider;
 import com.user.repository.UserRepository;
-import com.user.service.AsyncExecutor;
+//import com.user.service.AsyncExecutor;
 import com.user.service.job.ArchiveDatabaseJob;
 
 import io.swagger.annotations.Api;
@@ -64,8 +64,8 @@ public class TestController {
     @Autowired
     private EntityManager entityManager;
 
-    @Autowired
-    private AsyncExecutor asyncExecutor;
+//    @Autowired
+//    private AsyncExecutor asyncExecutor;
 
     @Autowired
     private ArchiveDatabaseJob archiveDatabaseJob;

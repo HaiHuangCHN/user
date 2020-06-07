@@ -5,7 +5,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
 import javax.persistence.EntityManager;
@@ -64,6 +63,11 @@ public class ArchiveDatabaseJob {
     @Autowired
     private AsyncExecutor asyncExecutor;
 
+    /**
+     * Single thread implementation
+     * 
+     * @return
+     */
     @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.READ_UNCOMMITTED, rollbackFor = Exception.class)
     public boolean archiveData() {
 //        long start = System.currentTimeMillis();
@@ -97,100 +101,75 @@ public class ArchiveDatabaseJob {
         return true;
     }
 
-//    @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.READ_UNCOMMITTED, rollbackFor = Exception.class) // TODO actually no meanning at all
+    /**
+     * Multi thread implementation
+     * 
+     * @throws Exception
+     */
     public void archiveDataAsyncFutureSpring() throws Exception {
-        asyncExecutor.setExecutor(Executors.newFixedThreadPool(10));
         ModelMapper modelMapper = new ModelMapper();
         modelMapper.getConfiguration().setFieldMatchingEnabled(true).setFieldAccessLevel(Configuration.AccessLevel.PRIVATE).setMatchingStrategy(MatchingStrategies.STANDARD);
         Timestamp timestamp = new Timestamp(System.currentTimeMillis() - 0);
         List<User> deletedTotalUserList = userRepository.findByUpdatedAtBefore(timestamp);
         for (int i = 1; i <= deletedTotalUserList.size() / 100; i++) {
-            // TODO how to handle when exception?
-            asyncExecutor.archiveDataAsyc(deletedTotalUserList.subList(((i - 1) * 100), (i * 100)), modelMapper);
+            asyncExecutor.archiveDataAsync(deletedTotalUserList.subList(((i - 1) * 100), (i * 100)), modelMapper);
         }
     }
 
-//  @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.READ_UNCOMMITTED, rollbackFor = Exception.class) // TODO actually no meanning at all
-    public void archiveDataAsyncFuture() throws InterruptedException, ExecutionException {
-        ModelMapper modelMapper = new ModelMapper();
-        modelMapper.getConfiguration().setFieldMatchingEnabled(true).setFieldAccessLevel(Configuration.AccessLevel.PRIVATE).setMatchingStrategy(MatchingStrategies.STANDARD);
-        Timestamp timestamp = new Timestamp(System.currentTimeMillis() - 0);
-        List<User> deletedTotalUserList = userRepository.findByUpdatedAtBefore(timestamp);
-        List<Future<Boolean>> resultList = new LinkedList<>();
-        for (int i = 1; i <= deletedTotalUserList.size() / 100; i++) {
-            // TODO how to handle when exception?
-            Future<Boolean> result = archiveDataAsyc(deletedTotalUserList.subList(((i - 1) * 100), (i * 100)), modelMapper);
-            resultList.add(result);
-        }
-        logger.info(String.valueOf(resultList.size()));
-        for (Future<Boolean> r : resultList) {
-            while (!r.isDone()) {
-                logger.info("Processing......");
-                Thread.sleep(10000);
-            }
-//          r.get(); // TODO block logger.info("Processing......");?
-//          if (r.isDone()) {
-//              r.get();
-//          }
-        }
-    }
-
-//    @Transactional // TODO how set up transaction?
-    public Future<Boolean> archiveDataAsyc(List<User> deletedUserList, ModelMapper modelMapper) {
-        return Executors.newFixedThreadPool(10).submit(() -> {
-            for (int count = 0; count < deletedUserList.size(); count++) {
-                UserArch userArch = modelMapper.map(deletedUserList.get(count), UserArch.class);
-                userArchRepository.save(userArch);
-                userArchRepository.flush();
-                userRepository.delete(deletedUserList.get(count));
-                userRepository.flush();
-//                // TODO why not able to achieve this
-//                // TODO error detail: No EntityManager with actual transaction available for
-//                // current thread
-//                entityManager.flush();
-            }
-            entityManager.clear();
-            return true;
-        });
-    }
-
-    public void archiveDataAsyncCompletableFuture() throws InterruptedException, ExecutionException {
-        ModelMapper modelMapper = new ModelMapper();
-        modelMapper.getConfiguration().setFieldMatchingEnabled(true).setFieldAccessLevel(Configuration.AccessLevel.PRIVATE).setMatchingStrategy(MatchingStrategies.STANDARD);
-        Timestamp timestamp = new Timestamp(System.currentTimeMillis() - 0);
-        List<Future<Boolean>> resultList = new LinkedList<>();
-        List<User> deletedTotalUserList = userRepository.findByUpdatedAtBefore(timestamp);
-        for (int i = 1; i <= deletedTotalUserList.size() / 100; i++) {
-            Future<Boolean> result = test(deletedTotalUserList.subList(((i - 1) * 100), (i * 100)), modelMapper);
-            resultList.add(result);
-        }
-        logger.info(String.valueOf(resultList.size()));
+//    @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.READ_UNCOMMITTED, rollbackFor = Exception.class) // TODO actually no meanning at all
+//    public void archiveDataAsyncFuture() throws InterruptedException, ExecutionException {
+//        ModelMapper modelMapper = new ModelMapper();
+//        modelMapper.getConfiguration().setFieldMatchingEnabled(true).setFieldAccessLevel(Configuration.AccessLevel.PRIVATE).setMatchingStrategy(MatchingStrategies.STANDARD);
+//        Timestamp timestamp = new Timestamp(System.currentTimeMillis() - 0);
+//        List<User> deletedTotalUserList = userRepository.findByUpdatedAtBefore(timestamp);
+//        List<Future<Boolean>> resultList = new LinkedList<>();
+//        for (int i = 1; i <= deletedTotalUserList.size() / 100; i++) {
+//            // TODO how to handle when exception?
+//            Future<Boolean> result = asyncExecutor.archiveDataAsyncFuture(deletedTotalUserList.subList(((i - 1) * 100), (i * 100)), modelMapper);
+//            resultList.add(result);
+//        }
+////        logger.info(String.valueOf(resultList.size()));
+//        for (Future<Boolean> r : resultList) {
+//            while (!r.isDone()) {
+//                logger.info("Processing......");
+//                Thread.sleep(10000);
+//            }
+////          r.get(); // TODO block logger.info("Processing......");?
+//            if (r.isDone()) {
+//                r.get();
+//            }
+//        }
+//    }
+//
+//
+//    /**
+//     * TODO how to implements asynchronous computation using Executors
+//     * 
+//     * @throws InterruptedException
+//     * @throws ExecutionException
+//     */
+//    @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.READ_UNCOMMITTED, rollbackFor = Exception.class) // TODO actually no meanning at all
+//    public void archiveDataAsyncCompletableFuture() throws InterruptedException, ExecutionException {
+//        ModelMapper modelMapper = new ModelMapper();
+//        modelMapper.getConfiguration().setFieldMatchingEnabled(true).setFieldAccessLevel(Configuration.AccessLevel.PRIVATE).setMatchingStrategy(MatchingStrategies.STANDARD);
+//        Timestamp timestamp = new Timestamp(System.currentTimeMillis() - 0);
+//        List<Future<Boolean>> resultList = new LinkedList<>();
+//        List<User> deletedTotalUserList = userRepository.findByUpdatedAtBefore(timestamp);
+//        for (int i = 1; i <= deletedTotalUserList.size() / 100; i++) {
+//            Future<Boolean> result = asyncExecutor.archiveDataAsyncCompletableFuture(deletedTotalUserList.subList(((i - 1) * 100), (i * 100)), modelMapper);
+//            resultList.add(result);
+//        }
+//        logger.info(String.valueOf(resultList.size()));
 //        CompletableFuture.allOf(resultList.toArray(new CompletableFuture[resultList.size()]));
 //        for (Future<Boolean> r : resultList) {
-////            while (!r.isDone()) {
-////                logger.info("Processing......");
-////                Thread.sleep(10000);
-////            }
-////            r.get(); // TODO block logger.info("Processing......");?
-////            if (r.isDone()) {
-////                r.get();
-////            }
+//            while (!r.isDone()) {
+//                logger.info("Processing......");
+//                Thread.sleep(10000);
+//            }
+//            if (r.isDone()) {
+//                r.get();
+//            }
 //        }
-    }
-
-//    @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.READ_UNCOMMITTED, rollbackFor = Exception.class) // TODO actually no meanning at all
-    public CompletableFuture<Boolean> test(List<User> deletedUserList, ModelMapper modelMapper) {
-        return CompletableFuture.supplyAsync(() -> {
-            for (int count = 0; count < deletedUserList.size(); count++) {
-                UserArch userArch = modelMapper.map(deletedUserList.get(count), UserArch.class);
-                userArchRepository.save(userArch);
-                userArchRepository.flush();
-                userRepository.delete(deletedUserList.get(count));
-                userRepository.flush();
-            }
-            entityManager.clear();
-            return true;
-        });
-    }
+//    }
 
 }
