@@ -1,8 +1,6 @@
 package com.user.service;
 
 import java.util.List;
-import java.util.concurrent.Callable;
-import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 
 import javax.persistence.EntityManager;
@@ -109,15 +107,15 @@ public class AsyncExecutor {
 //    }
 
     @Async
-    @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.READ_UNCOMMITTED, rollbackFor = Exception.class) // TODO how to set up transaction?
+    @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.READ_UNCOMMITTED, rollbackFor = Exception.class)
     public void archiveDataAsyc(List<User> deletedUserList, ModelMapper modelMapper) throws Exception {
         for (int count = 0; count < deletedUserList.size(); count++) {
             User user = deletedUserList.get(count);
             UserArch userArch = modelMapper.map(user, UserArch.class);
             userArchRepository.save(userArch);
-            userArchRepository.flush();
             userRepository.delete(user);
-            userRepository.flush();
+            entityManager.flush();
+            // TODO dummy code
             if (user.getUserId() == 29997) {
                 throw new Exception("Test");
             }
