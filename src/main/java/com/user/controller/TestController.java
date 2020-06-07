@@ -73,7 +73,7 @@ public class TestController {
     private static final Logger logger = LoggerFactory.getLogger(CommonController.class);
 
     @RequestMapping(value = "/archive/data", method = RequestMethod.GET)
-    public ResponseEntity<String> archiveData() throws InterruptedException, ExecutionException {
+    public ResponseEntity<String> archiveData() throws Exception {
         long start = System.currentTimeMillis();
 //        archiveDatabaseJob.archiveData();
 //        archiveDatabaseJob.archiveDataAsyncFuture();

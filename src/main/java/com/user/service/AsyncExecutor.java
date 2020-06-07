@@ -1,8 +1,9 @@
 package com.user.service;
 
 import java.util.List;
+import java.util.concurrent.Callable;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Future;
 
 import javax.persistence.EntityManager;
 
@@ -12,6 +13,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.user.dao.entity.User;
@@ -51,22 +54,75 @@ public class AsyncExecutor {
         this.executor = executor;
     }
 
+//    @Async
+//    @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.READ_UNCOMMITTED, rollbackFor = Exception.class) // TODO how to set up transaction?
+//    public void archiveDataAsycFuture(List<User> deletedUserList, ModelMapper modelMapper) {
+//        try {
+//            executor.submit((Callable) () -> {
+//                for (int count = 0; count < deletedUserList.size(); count++) {
+//                    User user = deletedUserList.get(count);
+//                    UserArch userArch = modelMapper.map(user, UserArch.class);
+//                    userArchRepository.save(userArch);
+//                    userArchRepository.flush();
+//                    userRepository.delete(user);
+//                    userRepository.flush();
+////                // TODO why not able to achieve this
+////                // TODO error detail: No EntityManager with actual transaction available for
+////                // current thread
+////                entityManager.flush();
+//                    if (user.getUserId() == 29997) {
+//                        throw new Exception("Test");
+//                    }
+//                }
+//                entityManager.clear();
+//                return "End";
+//            });
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            throw e;
+//        }
+//    }
+//
+//    @Async
+//    @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.READ_UNCOMMITTED, rollbackFor = Exception.class) // TODO how to set up transaction?
+//    public void archiveDataAsycCompletableFuture(List<User> deletedUserList, ModelMapper modelMapper) {
+//        try {
+//            CompletableFuture.supplyAsync(() -> {
+//                for (int count = 0; count < deletedUserList.size(); count++) {
+//                    User user = deletedUserList.get(count);
+//                    UserArch userArch = modelMapper.map(user, UserArch.class);
+//                    userArchRepository.save(userArch);
+//                    userArchRepository.flush();
+//                    userRepository.delete(deletedUserList.get(count));
+//                    userRepository.flush();
+//                    if (user.getUserId() == 29997) {
+//                        throw new RuntimeException("Test");
+//                    }
+//                }
+//                entityManager.clear();
+//                return true;
+//            });
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            throw e;
+//        }
+//    }
+
     @Async
-//    @Transactional // TODO how set up transaction?
-    public void archiveDataAsyc(List<User> deletedUserList, ModelMapper modelMapper) {
-        executor.submit(() -> {
-            for (int count = 0; count < deletedUserList.size(); count++) {
-                UserArch userArch = modelMapper.map(deletedUserList.get(count), UserArch.class);
-                userArchRepository.save(userArch);
-                userArchRepository.flush();
-                userRepository.delete(deletedUserList.get(count));
-                userRepository.flush();
-//                // TODO why not able to achieve this
-//                // TODO error detail: No EntityManager with actual transaction available for
-//                // current thread
-//                entityManager.flush();
+    @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.READ_UNCOMMITTED, rollbackFor = Exception.class) // TODO how to set up transaction?
+    public void archiveDataAsyc(List<User> deletedUserList, ModelMapper modelMapper) throws Exception {
+        for (int count = 0; count < deletedUserList.size(); count++) {
+            User user = deletedUserList.get(count);
+            UserArch userArch = modelMapper.map(user, UserArch.class);
+            userArchRepository.save(userArch);
+            userArchRepository.flush();
+            userRepository.delete(user);
+            userRepository.flush();
+            if (user.getUserId() == 29997) {
+                throw new Exception("Test");
             }
-            entityManager.clear();
-        });
+        }
+        entityManager.clear();
     }
+
 }
