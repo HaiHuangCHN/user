@@ -93,6 +93,7 @@ public class AsyncExecutorImpl implements AsyncExecutor {
 //        }
 //    }
 //
+//    @Async("threadPoolTaskExecutor")
     @Async
     @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.READ_UNCOMMITTED, rollbackFor = Exception.class)
     public void archiveDataAsync(List<User> deletedUserList, ModelMapper modelMapper) throws Exception {
@@ -103,7 +104,7 @@ public class AsyncExecutorImpl implements AsyncExecutor {
             userRepository.delete(user);
             entityManager.flush();
 //            // TODO dummy code
-//            if (user.getUserId() == 29997) {
+//            if (user.getUserId() == 7) {
 //                throw new Exception("Test");
 //            }
         }
