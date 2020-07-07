@@ -68,7 +68,7 @@ public class ArchiveDatabaseJob {
      * 
      * @return
      */
-    @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.READ_UNCOMMITTED, rollbackFor = Exception.class)
+    @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.REPEATABLE_READ, rollbackFor = Exception.class)
     public boolean archiveData() {
 //        long start = System.currentTimeMillis();
         ModelMapper modelMapper = new ModelMapper();

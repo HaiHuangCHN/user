@@ -12,7 +12,7 @@ public class AddProfileReq {
     private String email;
 
     @NotNull
-    @Size(min = 1, max = 3, message = "Sex should be valid")
+    @Size(message = "Sex should be valid")
     private String sex;
 
     private Integer age;

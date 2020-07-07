@@ -16,6 +16,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -35,6 +36,7 @@ public class Profile extends BaseEntity implements Serializable {
 
     @Column(name = "email", length = 50)
     @Size(max = 50, message = "email exceed length constraint")
+    @Email(message = "Email is not valid")
     private String email;
 
     @Column(name = "sex")
