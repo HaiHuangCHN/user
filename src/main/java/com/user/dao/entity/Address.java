@@ -20,7 +20,7 @@ public class Address extends BaseEntity implements Serializable {
     /**
      * 
      */
-    private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = -9080434504238806765L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -124,8 +124,8 @@ public class Address extends BaseEntity implements Serializable {
 
     @Override
     public String toString() {
-        return "Address [addressId=" + addressId + ", country=" + country + ", provience=" + provience + ", city=" + city + ", district=" + district + ", detailAddress="
-                + detailAddress + ", postcode=" + postcode + ", profile=" + profile + "]";
+        return "Address [addressId=" + addressId + ", country=" + country + ", provience=" + provience + ", city=" + city + ", district=" + district + ", detailAddress=" + detailAddress
+                + ", postcode=" + postcode + ", profile=" + profile + "]";
     }
 
 }

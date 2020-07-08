@@ -75,10 +75,10 @@ public class TestController {
     @RequestMapping(value = "/archive/data", method = RequestMethod.GET)
     public ResponseEntity<String> archiveData() throws Exception {
         long start = System.currentTimeMillis();
-//        archiveDatabaseJob.archiveData();
+        archiveDatabaseJob.archiveData();
 //        archiveDatabaseJob.archiveDataAsyncFuture();
 //        archiveDatabaseJob.archiveDataAsyncCompletableFuture();
-      archiveDatabaseJob.archiveDataAsyncFutureSpring();
+//      archiveDatabaseJob.archiveDataAsyncFutureSpring();
         long end = System.currentTimeMillis();
         logger.info("Total Duration: " + (end - start));
         return ResponseEntity.status(HttpStatus.SC_OK).body("End");

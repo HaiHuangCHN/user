@@ -27,7 +27,7 @@ public class Profile extends BaseEntity implements Serializable {
     /**
      * 
      */
-    private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 503827839614952904L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -37,7 +37,7 @@ public class Profile extends BaseEntity implements Serializable {
     @Column(name = "email", length = 50)
     @Size(max = 50, message = "email exceed length constraint")
     @Email(message = "Email is not valid")
-    private String email;
+    private String email = "test_202007080932@mail.com";
 
     @Column(name = "sex")
     @Enumerated(EnumType.STRING)
