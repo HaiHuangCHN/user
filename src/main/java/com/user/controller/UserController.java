@@ -3,8 +3,8 @@ package com.user.controller;
 import javax.validation.Valid;
 
 import org.apache.http.HttpStatus;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -39,7 +39,7 @@ public class UserController {
     @Autowired
     private UserService profileService;
 
-    private static final Logger logger = LoggerFactory.getLogger(UserController.class);
+    private static final Logger logger = LogManager.getLogger(UserController.class);
 
     @ApiOperation(value = "Create a new user", notes = "Only when the user is new to the system does it succeed to create, or will fail")
     @ApiResponses(value = { @ApiResponse(code = HttpStatus.SC_OK, message = Constants.SUCCESS, response = Boolean.class),

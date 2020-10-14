@@ -88,7 +88,7 @@ public class UserDataProvider {
 
     // bean name "keyGenerator" should exist, or will cause error
     @Cacheable(value = "users", key = "#userName")
-    public User findByUserName(String userName) {
+    public User findByUsername(String userName) {
         log.info("Enter findByUserName method");
         User user = userRepository.findByUsername(userName);
         return user;

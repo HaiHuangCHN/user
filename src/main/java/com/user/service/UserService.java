@@ -136,7 +136,7 @@ public class UserService {
     public ProfileResp displayProfile(String username) {
         ProfileResp profileResp = new ProfileResp();
 
-        User user = userRepository.findByUsername(username);
+        User user = userDataProvider.findByUsername(username);
         Profile profileDb = user.getProfile();
         Collection<Address> addressList = profileDb.getAddressList();
 //        logger.info(profileDb.toString());
