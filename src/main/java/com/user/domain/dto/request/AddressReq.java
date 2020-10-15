@@ -1,15 +1,25 @@
-package com.user.dto.response;
+package com.user.domain.dto.request;
 
-import io.swagger.annotations.ApiModel;
+import javax.validation.constraints.NotNull;
 
-@ApiModel(value = "AddressResp object model", description = "Address Information")
-public class AddressResp {
+public class AddressReq {
+
+    @NotNull
     private String country;
+
     private String provience;
+
     private String city;
+
     private String district;
+
     private String detailAddress;
+
     private String postcode;
+
+    public AddressReq() {
+        super();
+    }
 
     public String getCountry() {
         return country;

@@ -18,8 +18,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.user.dao.entity.User;
 import com.user.dao.entity.UserArch;
-import com.user.repository.UserArchRepository;
-import com.user.repository.UserRepository;
+import com.user.dao.repository.UserArchRepository;
+import com.user.dao.repository.UserRepository;
 
 @Service
 public class AsyncExecutorImpl implements AsyncExecutor {

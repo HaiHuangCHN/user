@@ -22,13 +22,13 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.user.dao.entity.User;
 import com.user.dao.entity.UserArch;
-import com.user.repository.AddressArchRepository;
-import com.user.repository.AddressRepository;
-import com.user.repository.ProfileArchRepository;
-import com.user.repository.ProfileRepository;
-import com.user.repository.UserArchRepository;
-import com.user.repository.UserDataProvider;
-import com.user.repository.UserRepository;
+import com.user.dao.repository.AddressArchRepository;
+import com.user.dao.repository.AddressRepository;
+import com.user.dao.repository.ProfileArchRepository;
+import com.user.dao.repository.ProfileRepository;
+import com.user.dao.repository.UserArchRepository;
+import com.user.dao.repository.UserDataProvider;
+import com.user.dao.repository.UserRepository;
 import com.user.service.AsyncExecutor;
 
 @Service

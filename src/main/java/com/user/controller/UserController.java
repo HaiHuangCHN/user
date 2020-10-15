@@ -17,9 +17,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.user.costant.Constants;
-import com.user.dto.request.AddUserReq;
-import com.user.dto.request.LoginReq;
-import com.user.dto.response.ProfileResp;
+import com.user.domain.dto.request.AddUserReq;
+import com.user.domain.dto.request.LoginReq;
+import com.user.domain.dto.response.ProfileResp;
 import com.user.exception.ErrorResponseException;
 import com.user.exception.InputParameterException;
 import com.user.service.UserService;
