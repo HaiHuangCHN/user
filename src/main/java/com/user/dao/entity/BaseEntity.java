@@ -4,17 +4,14 @@ import java.sql.Timestamp;
 
 import javax.persistence.Column;
 import javax.persistence.MappedSuperclass;
-import javax.validation.constraints.NotNull;
 
 @MappedSuperclass
 public class BaseEntity {
 
-    @Column(name = "created_at", nullable = false)
-    @NotNull(message = "createdAt cannot be null")
+    @Column(name = "created_at", nullable = false, insertable = false, updatable = false)
     private Timestamp createdAt;
 
-    @Column(name = "updated_at", nullable = false)
-    @NotNull(message = "updatedAt cannot be null")
+    @Column(name = "updated_at", nullable = false, insertable = false, updatable = false)
     private Timestamp updatedAt;
 
     public Timestamp getCreatedAt() {

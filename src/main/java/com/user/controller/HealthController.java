@@ -21,7 +21,7 @@ public class HealthController {
     private static final Logger logger = LoggerFactory.getLogger(HealthController.class);
 
     @ApiResponses(value = { @ApiResponse(code = HttpStatus.SC_OK, message = Constants.SUCCESS, response = String.class),
-            @ApiResponse(code = HttpStatus.SC_INTERNAL_SERVER_ERROR, message = Constants.PROFILE_ERROR_RESPONSE) })
+            @ApiResponse(code = HttpStatus.SC_INTERNAL_SERVER_ERROR, message = Constants.ERROR_RESPONSE) })
     @RequestMapping(value = "/health", method = RequestMethod.GET)
     public @ResponseBody String checkApp() {
         logger.info("OK");
