@@ -31,6 +31,7 @@ import com.user.dao.repository.UserDataProvider;
 import com.user.dao.repository.UserRepository;
 import com.user.service.AsyncExecutor;
 
+// TODO Rename into ArchiveRecordTest
 @Service
 public class ArchiveDatabaseJob {
 
@@ -116,7 +117,7 @@ public class ArchiveDatabaseJob {
         }
     }
 
-//    @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.READ_UNCOMMITTED, rollbackFor = Exception.class) // TODO actually no meanning at all
+//    @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.READ_UNCOMMITTED, rollbackFor = Exception.class) // TODO Actually no meanning at all
 //    public void archiveDataAsyncFuture() throws InterruptedException, ExecutionException {
 //        ModelMapper modelMapper = new ModelMapper();
 //        modelMapper.getConfiguration().setFieldMatchingEnabled(true).setFieldAccessLevel(Configuration.AccessLevel.PRIVATE).setMatchingStrategy(MatchingStrategies.STANDARD);

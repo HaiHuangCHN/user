@@ -5,10 +5,15 @@ import io.swagger.annotations.ApiModel;
 @ApiModel(value = "AddressResp object model", description = "Address Information")
 public class AddressResp {
     private String country;
+
     private String provience;
+
     private String city;
+
     private String district;
+
     private String detailAddress;
+
     private String postcode;
 
     public String getCountry() {

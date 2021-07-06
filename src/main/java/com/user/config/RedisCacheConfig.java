@@ -51,7 +51,7 @@ public class RedisCacheConfig extends CachingConfigurerSupport {
         RedisCacheConfiguration defaultCacheConfig = RedisCacheConfiguration.defaultCacheConfig();
         // Set default expire time
         defaultCacheConfig = defaultCacheConfig.entryTtl(Duration.ofSeconds(defaultExpireTime))
-                // if cache's value is NULL, this will not be accepted and will return as
+                // If cache's value is NULL, this will not be accepted and will return as
                 // exception etc.
                 .disableCachingNullValues();
 
@@ -60,7 +60,6 @@ public class RedisCacheConfig extends CachingConfigurerSupport {
 
     @Bean
     public StringRedisTemplate stringRedisTemplate(RedisConnectionFactory redisConnectionFactory) {
-
         StringRedisTemplate stringRedisTemplate = new StringRedisTemplate(redisConnectionFactory);
         Jackson2JsonRedisSerializer<Object> jackson2JsonRedisSerializer = new Jackson2JsonRedisSerializer<Object>(Object.class);
         ObjectMapper om = new ObjectMapper();
@@ -68,7 +67,7 @@ public class RedisCacheConfig extends CachingConfigurerSupport {
         om.enableDefaultTyping(ObjectMapper.DefaultTyping.NON_FINAL);
         jackson2JsonRedisSerializer.setObjectMapper(om);
         stringRedisTemplate.setValueSerializer(jackson2JsonRedisSerializer);
-        // enable transaction
+        // Enable transaction
         stringRedisTemplate.setEnableTransactionSupport(true);
         stringRedisTemplate.afterPropertiesSet();
         return stringRedisTemplate;
@@ -89,7 +88,7 @@ public class RedisCacheConfig extends CachingConfigurerSupport {
         // Use StringRedisSerializer to serialize & deserialize key
         // And StringRedisSerializer: Creates a new StringRedisSerializer using UTF-8.
         redisTemplate.setKeySerializer(new StringRedisSerializer());
-        // enable transaction
+        // Enable transaction
         redisTemplate.setEnableTransactionSupport(true);
         redisTemplate.afterPropertiesSet();
         return redisTemplate;

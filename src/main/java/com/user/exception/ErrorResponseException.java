@@ -5,8 +5,11 @@ public class ErrorResponseException extends Exception {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
+
 	private String code;
+
 	private String message;
+
 	private String detail;
 
 	public ErrorResponseException(String code, String message, String detail) {

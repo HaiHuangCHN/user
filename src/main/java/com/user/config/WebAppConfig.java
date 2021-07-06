@@ -26,4 +26,5 @@ public class WebAppConfig implements WebMvcConfigurer {
         registry.addResourceHandler("/").addResourceLocations("classpath:/");
         registry.addResourceHandler("/csrf").addResourceLocations("classpath:/");
     }
+
 }

@@ -44,7 +44,7 @@ public class AsyncExecutorImpl implements AsyncExecutor {
 //        return executor;
 //    }
 
-//    @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.READ_UNCOMMITTED, rollbackFor = Exception.class) // TODO how to set up transaction when run in asynchronous?
+//    @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.READ_UNCOMMITTED, rollbackFor = Exception.class) // TODO How to set up transaction when run in asynchronous?
 //    public void archiveDataAsyncFuture(List<User> deletedUserList, ModelMapper modelMapper) {
 //        executor.submit((Callable) () -> {
 //            for (int count = 0; count < deletedUserList.size(); count++) {
@@ -68,7 +68,7 @@ public class AsyncExecutorImpl implements AsyncExecutor {
 //        });
 //    }
 //
-//  @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.READ_UNCOMMITTED, rollbackFor = Exception.class) // TODO how to set up transaction when run in asynchronous?
+//  @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.READ_UNCOMMITTED, rollbackFor = Exception.class) // TODO How to set up transaction when run in asynchronous?
 //    public void archiveDataAsyncCompletableFuture(List<User> deletedUserList, ModelMapper modelMapper) {
 //        try {
 //            CompletableFuture.supplyAsync(() -> {

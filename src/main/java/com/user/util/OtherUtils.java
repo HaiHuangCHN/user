@@ -22,6 +22,7 @@ import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.user.exception.ApplicationException;
 
 public class OtherUtils {
+
 	private static Pattern humpPattern = Pattern.compile("[A-Z]");
 
 	public static <T> T toSnakeObject(String json, Class<T> clazz) throws IOException {
@@ -102,7 +103,7 @@ public class OtherUtils {
 	/**
 	 * This function is used to encode the sign and signature of the order API
 	 * 
-	 * @param str key, str message
+	 * @param key key, str message
 	 * @return str encode
 	 * @throws ApplicationException
 	 */

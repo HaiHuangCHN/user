@@ -25,7 +25,7 @@ import io.swagger.annotations.ApiOperation;
 public class RedisController {
 
     @Autowired
-    RedisTemplate<String, Object> redisTemplate;
+    private RedisTemplate<String, Object> redisTemplate;
 
     @Autowired
     private StringRedisTemplate stringRedisTemplate;
@@ -71,4 +71,5 @@ public class RedisController {
         redisTemplate.delete(key);
         return key + ", " + redisTemplate.opsForValue().get(key);
     }
+
 }

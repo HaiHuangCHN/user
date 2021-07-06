@@ -7,5 +7,4 @@ import com.user.dao.entity.ProfileArch;
 
 @Repository
 public interface ProfileArchRepository extends JpaRepository<ProfileArch, Integer> {
-
 }

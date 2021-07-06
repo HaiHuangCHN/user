@@ -18,7 +18,7 @@ import javax.validation.constraints.NotNull;
 public class Address extends BaseEntity implements Serializable {
 
     /**
-     * 
+     *
      */
     private static final long serialVersionUID = -9080434504238806765L;
 
@@ -48,7 +48,7 @@ public class Address extends BaseEntity implements Serializable {
     @Column(name = "postcode")
     private String postcode;
 
-//    @Column(s) not allowed on a @ManyToOne property
+    //    @Column(s) not allowed on a @ManyToOne property
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "profile_id", referencedColumnName = "profile_id", nullable = false)
     @NotNull(message = "profile can not be null")

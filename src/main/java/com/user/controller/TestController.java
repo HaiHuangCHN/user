@@ -1,11 +1,13 @@
 package com.user.controller;
 
-import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.persistence.EntityManager;
-
+import com.user.dao.entity.Address;
+import com.user.dao.entity.Profile;
+import com.user.dao.entity.SexEnum;
+import com.user.dao.entity.User;
+import com.user.dao.repository.*;
+import com.user.service.AsyncExecutor;
+import com.user.service.job.ArchiveDatabaseJob;
+import io.swagger.annotations.Api;
 import org.apache.http.HttpStatus;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -19,26 +21,18 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.user.dao.entity.Address;
-import com.user.dao.entity.Profile;
-import com.user.dao.entity.SexEnum;
-import com.user.dao.entity.User;
-import com.user.dao.repository.AddressArchRepository;
-import com.user.dao.repository.AddressRepository;
-import com.user.dao.repository.ProfileArchRepository;
-import com.user.dao.repository.ProfileRepository;
-import com.user.dao.repository.UserArchRepository;
-import com.user.dao.repository.UserDataProvider;
-import com.user.dao.repository.UserRepository;
-//import com.user.service.AsyncExecutor;
-import com.user.service.job.ArchiveDatabaseJob;
-
-import io.swagger.annotations.Api;
+import javax.persistence.EntityManager;
+import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.List;
 
 @Controller
 @RequestMapping(path = "/test")
 @Api(tags = "Test API")
 public class TestController {
+
+    private static final Logger logger = LogManager.getLogger(TestController.class);
+
     @Autowired
     private UserRepository userRepository;
 
@@ -63,13 +57,11 @@ public class TestController {
     @Autowired
     private EntityManager entityManager;
 
-//    @Autowired
-//    private AsyncExecutor asyncExecutor;
+    @Autowired
+    private AsyncExecutor asyncExecutor;
 
     @Autowired
     private ArchiveDatabaseJob archiveDatabaseJob;
-
-    private static final Logger logger = LogManager.getLogger(CommonController.class);
 
     @RequestMapping(value = "/archive/data", method = RequestMethod.GET)
     public ResponseEntity<String> archiveData() throws Exception {
@@ -89,13 +81,6 @@ public class TestController {
         return ResponseEntity.status(HttpStatus.SC_OK).body(result);
     }
 
-    @RequestMapping(value = "/count/by/email", method = RequestMethod.GET)
-    public ResponseEntity<Long> countUser() {
-        long result = count();
-        return ResponseEntity.status(HttpStatus.SC_OK).body(result);
-    }
-
-    @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.READ_COMMITTED, rollbackFor = Exception.class)
     public boolean insertData(long count) {
         Timestamp timestamp = new Timestamp(System.currentTimeMillis() - 360000000L);
         for (int i = 200001; i <= count; i++) {
@@ -133,11 +118,6 @@ public class TestController {
             }
         }
         return true;
-    }
-
-    public long count() {
-        long count = profileRepository.countByEmail("test@mail.com");
-        return count;
     }
 
 }

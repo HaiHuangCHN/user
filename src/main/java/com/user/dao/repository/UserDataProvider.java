@@ -1,8 +1,11 @@
 package com.user.dao.repository;
 
+import java.sql.Timestamp;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
@@ -11,16 +14,23 @@ import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.user.dao.entity.Address;
+import com.user.dao.entity.Profile;
+import com.user.dao.entity.SexEnum;
 import com.user.dao.entity.User;
+import com.user.domain.dto.request.AddUserReq;
+import com.user.domain.dto.request.AddressReq;
+import com.user.exception.ErrorResponseException;
 import com.user.service.UserService;
+import com.user.util.MD5Util;
 import com.user.util.RedisCacheUtil;
 
 /**
  * Created by yexin on 2017/9/8.
- *
+ * <p>
  * 在Impl基础上+ 防止缓存雪崩和缓存穿透功能
  */
-@Service /* (value = "userServiceImpl4") */
+@Service
 public class UserDataProvider {
 
     private static final Logger log = LoggerFactory.getLogger(UserService.class);
@@ -35,11 +45,11 @@ public class UserDataProvider {
     private AddressRepository addressRepository;
 
     @Autowired
-    RedisCacheUtil redisCacheUtil;
-//
-//	@Value("${cache.default.expire-time}")
-//	private Long defaultExpireTime;
-//
+    private RedisCacheUtil redisCacheUtil;
+
+    @Value("${cache.default.expire-time}")
+    private Long defaultExpireTime;
+
 //	public User getUser(Integer userId) {
 //
 //		String key = "user" + userId;
@@ -86,7 +96,7 @@ public class UserDataProvider {
 //		return user;
 //	}	
 
-    // bean name "keyGenerator" should exist, or will cause error
+    // Bean name "keyGenerator" should exist, or will cause error
     @Cacheable(value = "users", key = "#userName")
     public User findByUsername(String userName) {
         log.info("Enter findByUserName method");
@@ -106,15 +116,16 @@ public class UserDataProvider {
 
     @CacheEvict(value = "users", key = "#user.userId")
     public void delete(User user) throws Exception {
-//		log.info("Enter delete method");
-//		redisCacheUtil.delete("users::" + user.getUsername());
-//		if (6 / 3 == 2) {
-//			throw new Exception();			
-//		}
+//        // Test Stub
+//        log.info("Enter delete method");
+//        redisCacheUtil.delete("users::" + user.getUsername());
+//        if (6 / 3 == 2) {
+//            throw new Exception();
+//        }
         userRepository.delete(user);
     }
 
-    // method to simulate a slow response
+    // Method to simulate a slow response
     private void simulateSlowService() {
         try {
             long time = 3000L;

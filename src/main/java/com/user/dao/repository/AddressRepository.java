@@ -7,5 +7,4 @@ import com.user.dao.entity.Address;
 
 @Repository
 public interface AddressRepository extends JpaRepository<Address, Integer> {
-
 }

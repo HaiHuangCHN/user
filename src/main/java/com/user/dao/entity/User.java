@@ -35,6 +35,9 @@ public class User extends BaseEntity implements Serializable {
     @Size(min = 1, max = 255, message = "password exceed length constraint")
     private String password;
 
+    @Column(name = "private_account")
+    private Boolean privateAccount = false;
+
     @OneToOne(mappedBy = "user", cascade = CascadeType.REMOVE, fetch = FetchType.EAGER)
     private Profile profile;
 
@@ -71,6 +74,14 @@ public class User extends BaseEntity implements Serializable {
         this.password = password;
     }
 
+    public Boolean getPrivateAccount() {
+        return privateAccount;
+    }
+
+    public void setPrivateAccount(Boolean privateAccount) {
+        this.privateAccount = privateAccount;
+    }
+
     public Profile getProfile() {
         return profile;
     }
@@ -81,7 +92,7 @@ public class User extends BaseEntity implements Serializable {
 
     @Override
     public String toString() {
-        return "User [userId=" + userId + ", username=" + username + ", password=" + password + ", profile=" + profile + "]";
+        return "User [userId=" + userId + ", username=" + username + ", password=" + password + ", privateAccount=" + privateAccount + ", profile=" + profile + "]";
     }
 
 }

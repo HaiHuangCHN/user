@@ -25,7 +25,7 @@ import javax.validation.constraints.Size;
 public class Profile extends BaseEntity implements Serializable {
 
     /**
-     * 
+     *
      */
     private static final long serialVersionUID = 503827839614952904L;
 
@@ -46,6 +46,7 @@ public class Profile extends BaseEntity implements Serializable {
 
     @Column(name = "phone_num", length = 11)
     @Size(max = 11, message = "phoneNum exceed length constraint")
+    @NotNull(message = "phoneNum cannot be null")
     private String phoneNum;
 
     @OneToOne(fetch = FetchType.EAGER)

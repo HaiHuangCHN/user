@@ -72,22 +72,18 @@ public class UserService {
         }
     }
 
+    @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.REPEATABLE_READ, rollbackFor = Exception.class)
     public boolean add(AddUserReq addUserReq) throws ErrorResponseException {
-        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+//        userDataProvider.add(addUserReq);
         String encodePassword = MD5Util.uppercaseMD5(addUserReq.getPassword());
         User user = new User(addUserReq.getUsername(), encodePassword);
+        userRepository.save(user);
         Profile profile = new Profile();
-        List<Address> addressList = new ArrayList<>();
-        user.setCreatedAt(timestamp);
-        user.setUpdatedAt(timestamp);
-        user.setProfile(profile);
         profile.setUser(user);
         profile.setSex(SexEnum.valueOf(addUserReq.getNewProfileReq().getSex()));
         profile.setEmail(addUserReq.getNewProfileReq().getEmail());
         profile.setPhoneNum(addUserReq.getNewProfileReq().getPhoneNum());
-        profile.setCreatedAt(timestamp);
-        profile.setUpdatedAt(timestamp);
-//      profileRepository.save(profile);// save user object is enough
+        profileRepository.save(profile);// save user object is enough
         if (addUserReq.getNewProfileReq().getAddressReqList() != null) {
             for (AddressReq address : addUserReq.getNewProfileReq().getAddressReqList()) {
                 Address addressDb = new Address();
@@ -98,28 +94,10 @@ public class UserService {
                 addressDb.setDistrict(address.getDistrict());
                 addressDb.setDetailAddress(address.getDetailAddress());
                 addressDb.setPostcode(address.getPostcode());
-                addressDb.setCreatedAt(timestamp);
-                addressDb.setUpdatedAt(timestamp);
-//			addressRepository.save(addressDb);// save user object is enough
-                addressList.add(addressDb);
+                addressRepository.save(addressDb);// save user object is enough
             }
         }
-        profile.setAddressList(addressList);
-        try {
-            userDataProvider.saveOrUpdate(user);
-            return true;
-        } catch (DataIntegrityViolationException e) {
-            if (e.getCause() instanceof ConstraintViolationException) {
-                ConstraintViolationException constraintViolationException = (ConstraintViolationException) e.getCause();
-                if (Constants.USERNAME.equals(constraintViolationException.getConstraintName())) {
-                    logger.error("username is not unique");
-                    throw new ErrorResponseException(ErrorCodeEnum.INVALID_USERNAME.getSelfDefinedCode(), ErrorCodeEnum.INVALID_USERNAME.getMessage(),
-                            ErrorCodeEnum.INVALID_USERNAME.getDetail());
-                }
-            }
-        }
-
-        return false;
+        return true;
     }
 
     @Transactional(rollbackFor = Exception.class)

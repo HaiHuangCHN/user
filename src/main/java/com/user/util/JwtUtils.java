@@ -1,14 +1,5 @@
 package com.user.util;
 
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.util.Assert;
-
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTCreator.Builder;
 import com.auth0.jwt.JWTVerifier;
@@ -17,14 +8,18 @@ import com.auth0.jwt.interfaces.Claim;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.user.costant.ErrorCodeEnum;
 import com.user.domain.dto.response.ProfileInfo;
-import com.user.domain.dto.response.ProfileResp;
 import com.user.exception.TokenException;
+import org.springframework.util.Assert;
 
-/** Token's encode and decode */
-//@Configuration
+import java.util.HashMap;
+import java.util.Map;
+
+/**
+ * Token's encode and decode
+ */
 public class JwtUtils {
 
-	public static final String SECRET = "JKKLJO^*&FGasd64%hasdHK";
+    public static final String SECRET = "JKKLJO^*&FGasd64%hasdHK";
 
 //	public static String secret;
 //
@@ -33,100 +28,99 @@ public class JwtUtils {
 //		JwtUtils.secret = secret;
 //	}
 
-	/**
-	 * Generate token
-	 * 
-	 * @param profileInfo
-	 * @return
-	 */
-	public static String generateToken(ProfileInfo profileInfo) {
-		Assert.notNull(profileInfo, "The object must be not null");
-		Map<String, Object> convertedMap = OtherUtils.convertObjToMap(profileInfo);
-		System.out.println(convertedMap);
+    /**
+     * Generate token
+     *
+     * @param profileInfo
+     * @return
+     */
+    public static String generateToken(ProfileInfo profileInfo) {
+        Assert.notNull(profileInfo, "The object must be not null");
+        Map<String, Object> convertedMap = OtherUtils.convertObjToMap(profileInfo);
+        System.out.println(convertedMap);
 
-		// header map
-		Map<String, Object> headerMap = new HashMap<>();
-		headerMap.put("alg", "HS256");
-		headerMap.put("typ", "JWT");
-		System.out.println(headerMap);
+        // header map
+        Map<String, Object> headerMap = new HashMap<>();
+        headerMap.put("alg", "HS256");
+        headerMap.put("typ", "JWT");
+        System.out.println(headerMap);
 
-		// payload map
-		Map<String, Object> payloadMap = new HashMap<>();
-		for (Map.Entry<String, Object> entrySet : convertedMap.entrySet()) {
-			if (entrySet.getValue() != null) {
-				payloadMap.put(entrySet.getKey(), entrySet.getValue());
-			}
-		}
-		System.out.println(payloadMap);
+        // payload map
+        Map<String, Object> payloadMap = new HashMap<>();
+        for (Map.Entry<String, Object> entrySet : convertedMap.entrySet()) {
+            if (entrySet.getValue() != null) {
+                payloadMap.put(entrySet.getKey(), entrySet.getValue());
+            }
+        }
+        System.out.println(payloadMap);
 
-		// build token
-		Builder builder = JWT.create().withHeader(headerMap);
-		for (Map.Entry<String, Object> entrySet : payloadMap.entrySet()) {
-			builder = builder.withClaim(entrySet.getKey().toString(), entrySet.getValue().toString()); // signature
-		}
-		String token = builder.sign(Algorithm.HMAC256(SECRET));
-		return token;
-	}
+        // build token
+        Builder builder = JWT.create().withHeader(headerMap);
+        for (Map.Entry<String, Object> entrySet : payloadMap.entrySet()) {
+            builder = builder.withClaim(entrySet.getKey().toString(), entrySet.getValue().toString()); // signature
+        }
+        String token = builder.sign(Algorithm.HMAC256(SECRET));
+        return token;
+    }
 
-	/**
-	 * Verify token
-	 * 
-	 * @param token
-	 * @param obj
-	 * @return
-	 * @throws TokenException
-	 */
-	public static boolean verifyToken(String token, Object obj) throws TokenException {
-		DecodedJWT decodedJwt = null;
-		try {
-			JWTVerifier verifier = JWT.require(Algorithm.HMAC256(SECRET)).build();
-			decodedJwt = verifier.verify(token);
-		} catch (Exception e) {
-			// Fail to verify token, throw exception
-			throw new TokenException(ErrorCodeEnum.FAIL_VERIFY_TOKEN.getSelfDefinedCode(),
-					ErrorCodeEnum.FAIL_VERIFY_TOKEN.getMessage(), ErrorCodeEnum.FAIL_VERIFY_TOKEN.getDetail());
-		}
-		boolean isMatch = checkFields(decodedJwt.getClaims(), obj);
-		return isMatch;
-	}
+    /**
+     * Verify token
+     *
+     * @param token
+     * @param obj
+     * @return
+     * @throws TokenException
+     */
+    public static boolean verifyToken(String token, Object obj) throws TokenException {
+        DecodedJWT decodedJwt = null;
+        try {
+            JWTVerifier verifier = JWT.require(Algorithm.HMAC256(SECRET)).build();
+            decodedJwt = verifier.verify(token);
+        } catch (Exception e) {
+            // Fail to verify token, throw exception
+            throw new TokenException(ErrorCodeEnum.FAIL_VERIFY_TOKEN.getSelfDefinedCode(),
+                    ErrorCodeEnum.FAIL_VERIFY_TOKEN.getMessage(), ErrorCodeEnum.FAIL_VERIFY_TOKEN.getDetail());
+        }
+        boolean isMatch = checkFields(decodedJwt.getClaims(), obj);
+        return isMatch;
+    }
 
-	private static boolean checkFields(Map<String, Claim> claims, Object obj) {
-		boolean isMatch = true;
-		Map<String, Object> objMap = OtherUtils.convertObjToMap(obj); // TODO Map<String, Object> why object? Would that
-																		// effect the logic?
-		removeElement(objMap);
-		if (claims.size() != objMap.size()) {
-			isMatch = false;
-			return isMatch;
-		}
-		for (Map.Entry<String, Claim> claimEntry : claims.entrySet()) {
-			boolean fieldMatch = false;
-			for (Map.Entry<String, Object> objEntry : objMap.entrySet()) {
-				String a = claimEntry.getKey();
-				String b = objEntry.getKey();
-				if (claimEntry.getKey().equals(objEntry.getKey())
-						&& claimEntry.getValue().asString().equals(objEntry.getValue())) {
-					fieldMatch = true;
-					break;
-				}
-			}
-			if (!fieldMatch) {
-				isMatch = false;
-				return isMatch;
-			} else {
+    private static boolean checkFields(Map<String, Claim> claims, Object obj) {
+        boolean isMatch = true;
+        Map<String, Object> objMap = OtherUtils.convertObjToMap(obj); // TODO Map<String, Object> why object? Would that effect the logic?
+        removeElement(objMap);
+        if (claims.size() != objMap.size()) {
+            isMatch = false;
+            return isMatch;
+        }
+        for (Map.Entry<String, Claim> claimEntry : claims.entrySet()) {
+            boolean fieldMatch = false;
+            for (Map.Entry<String, Object> objEntry : objMap.entrySet()) {
+                String a = claimEntry.getKey();
+                String b = objEntry.getKey();
+                if (claimEntry.getKey().equals(objEntry.getKey())
+                        && claimEntry.getValue().asString().equals(objEntry.getValue())) {
+                    fieldMatch = true;
+                    break;
+                }
+            }
+            if (!fieldMatch) {
+                isMatch = false;
+                return isMatch;
+            } else {
+                // TODO So? Just empty?
+            }
+        }
+        return isMatch;
+    }
 
-			}
-		}
-		return isMatch;
-	}
-
-	private static void removeElement(Map<String, Object> objMap) {
-		for (Map.Entry<String, Object> objEntry : objMap.entrySet()) {
-			if (objEntry.getKey().equals("sign")) {
-				objMap.remove("sign");
-			}
-		}
-	}
+    private static void removeElement(Map<String, Object> objMap) {
+        for (Map.Entry<String, Object> objEntry : objMap.entrySet()) {
+            if (objEntry.getKey().equals("sign")) {
+                objMap.remove("sign");
+            }
+        }
+    }
 
 //	// The following is just for reference, not used in project
 //	/** Token expired time period: 10 days */

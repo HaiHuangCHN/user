@@ -12,7 +12,7 @@ package com.user.config;
 //import org.springframework.retry.backoff.FixedBackOffPolicy;
 //import org.springframework.retry.policy.SimpleRetryPolicy;
 //import org.springframework.retry.support.RetryTemplate;
-//
+// TODO Finish it
 //public class RetryConfig {
 //	private static Logger logger = LoggerFactory.getLogger(RetryConfig.class);
 //

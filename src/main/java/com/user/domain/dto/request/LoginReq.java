@@ -6,6 +6,7 @@ public class LoginReq {
 
 	@NotBlank(message = "username is missing or blank")
 	private String username;
+
 	@NotBlank(message = "password is missing or blank")
 	private String password;
 

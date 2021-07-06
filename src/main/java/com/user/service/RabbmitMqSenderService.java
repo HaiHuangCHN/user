@@ -20,8 +20,8 @@ public class RabbmitMqSenderService {
 
 	public void send() {
 		String message = "Hello World!";
-		this.rabbitTemplate.convertAndSend(queue.getName(), message);
-		logger.info(" [x] Sent '" + message + "'");
+		rabbitTemplate.convertAndSend(queue.getName(), message);
+		logger.info("[User App] Sent '" + message + "'");
 	}
 
 }

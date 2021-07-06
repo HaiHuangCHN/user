@@ -18,7 +18,7 @@ public class MD5Util {
 			byte[] btInput = str.getBytes("UTF-8");
 			System.out.println(btInput);// Stub
 			/**
-			 * Why update???
+			 * TODO Why update???
 			 */
 			mdInst.update(btInput);
 			// digest() return MD5 hash value(Octal byte), but actually MD hash value should

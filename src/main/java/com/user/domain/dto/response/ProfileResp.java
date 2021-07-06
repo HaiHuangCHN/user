@@ -9,13 +9,25 @@ import io.swagger.annotations.ApiModel;
 
 @ApiModel(value = "User Profile Response Body", description = "Information returned when sucessfully created")
 public class ProfileResp {
-    @JsonInclude(Include.NON_NULL)
-    private ProfileInfo profileInfo;
-    @JsonInclude(Include.NON_NULL)
-    private String sign;
-    private List<AddressResp> addressResp;
+
     @JsonInclude(Include.NON_NULL)
     private String errorMsg;
+
+    @JsonInclude(Include.NON_NULL)
+    private String sign;
+
+    @JsonInclude(Include.NON_NULL)
+    private ProfileInfo profileInfo;
+
+    private List<AddressResp> addressResp;
+
+    public String getErrorMsg() {
+        return errorMsg;
+    }
+
+    public void setErrorMsg(String errorMsg) {
+        this.errorMsg = errorMsg;
+    }
 
     public ProfileInfo getProfileInfo() {
         return profileInfo;
@@ -41,17 +53,14 @@ public class ProfileResp {
         this.addressResp = addressResp;
     }
 
-    public String getErrorMsg() {
-        return errorMsg;
-    }
-
-    public void setErrorMsg(String errorMsg) {
-        this.errorMsg = errorMsg;
-    }
-
     @Override
     public String toString() {
-        return "ProfileResp [profileInfo=" + profileInfo + ", sign=" + sign + ", errorMsg=" + errorMsg + "]";
+        return "ProfileResp{" +
+                "errorMsg='" + errorMsg + '\'' +
+                ", sign='" + sign + '\'' +
+                ", profileInfo=" + profileInfo +
+                ", addressResp=" + addressResp +
+                '}';
     }
 
 }
