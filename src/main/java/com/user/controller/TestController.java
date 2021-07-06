@@ -6,7 +6,7 @@ import com.user.dao.entity.SexEnum;
 import com.user.dao.entity.User;
 import com.user.dao.repository.*;
 import com.user.service.AsyncExecutor;
-import com.user.service.job.ArchiveDatabaseJob;
+import com.user.service.job.ArchiveRecordTest;
 import io.swagger.annotations.Api;
 import org.apache.http.HttpStatus;
 import org.apache.logging.log4j.LogManager;
@@ -14,9 +14,6 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.transaction.annotation.Isolation;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -61,12 +58,12 @@ public class TestController {
     private AsyncExecutor asyncExecutor;
 
     @Autowired
-    private ArchiveDatabaseJob archiveDatabaseJob;
+    private ArchiveRecordTest archiveRecordTest;
 
     @RequestMapping(value = "/archive/data", method = RequestMethod.GET)
     public ResponseEntity<String> archiveData() throws Exception {
         long start = System.currentTimeMillis();
-        archiveDatabaseJob.archiveData();
+        archiveRecordTest.archiveData();
 //        archiveDatabaseJob.archiveDataAsyncFuture();
 //        archiveDatabaseJob.archiveDataAsyncCompletableFuture();
 //      archiveDatabaseJob.archiveDataAsyncFutureSpring();

@@ -1,11 +1,7 @@
 package com.user.service.job;
 
 import java.sql.Timestamp;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Future;
 
 import javax.persistence.EntityManager;
 
@@ -33,9 +29,9 @@ import com.user.service.AsyncExecutor;
 
 // TODO Rename into ArchiveRecordTest
 @Service
-public class ArchiveDatabaseJob {
+public class ArchiveRecordTest {
 
-    private static final Logger logger = LoggerFactory.getLogger(ArchiveDatabaseJob.class);
+    private static final Logger logger = LoggerFactory.getLogger(ArchiveRecordTest.class);
 
     @Autowired
     private UserRepository userRepository;
