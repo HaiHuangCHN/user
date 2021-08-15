@@ -1,86 +1,89 @@
 package com.user.util;
 
-import java.util.concurrent.TimeUnit;
-
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.BoundListOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Component;
 
+import java.util.concurrent.TimeUnit;
+
 @Component
 public class RedisCacheUtil {
 
-	@Autowired
-	private StringRedisTemplate stringRedisTemplate;
-	@Autowired
-	private RedisTemplate<String, Object> redisTemplate;
+    @Autowired
+    private StringRedisTemplate stringRedisTemplate;
 
-	/**
-	 * set string cache
-	 * 
-	 * @param key   String key
-	 * @param value String value
-	 */
-	public void set(String key, String value) {
-		stringRedisTemplate.opsForValue().set(key, value);
-	}
+    @Autowired
+    private RedisTemplate<String, Object> redisTemplate;
 
-	/**
-	 * set object cache
-	 * 
-	 * @param key   String key
-	 * @param value Object value
-	 */
-	public void set(String key, Object value) {
-		redisTemplate.opsForValue().set(key, value);
-	}
+    /**
+     * set string cache
+     *
+     * @param key   String key
+     * @param value String value
+     */
+    public void set(String key, String value) {
+        stringRedisTemplate.opsForValue().set(key, value);
+    }
 
-	/**
-	 * set object cache with expiration
-	 * 
-	 * @param key   String key
-	 * @param value Object value
-	 */
-	public void set(String key, Object value, Long timeOut) {
-		redisTemplate.opsForValue().set(key, value, timeOut, TimeUnit.SECONDS);
-	}
+    /**
+     * set object cache
+     *
+     * @param key   String key
+     * @param value Object value
+     */
+    public void set(String key, Object value) {
+        redisTemplate.opsForValue().set(key, value);
+    }
 
-	/**
-	 * get string cache by key
-	 * 
-	 * @param key
-	 * @return
-	 */
-	public String getValue(String key) {
-		return stringRedisTemplate.opsForValue().get(key);
-	}
+    /**
+     * set object cache with expiration
+     *
+     * @param key   String key
+     * @param value Object value
+     */
+    public void set(String key, Object value, Long timeOut) {
+        redisTemplate.opsForValue().set(key, value, timeOut, TimeUnit.SECONDS);
+    }
 
-	/**
-	 * get object cache by key
-	 * 
-	 * @param key
-	 * @return
-	 */
-	public Object getValueOfObject(String key) {
-		return redisTemplate.opsForValue().get(key);
-	}
+    /**
+     * get string cache by key
+     *
+     * @param key
+     * @return
+     */
+    public String getValue(String key) {
+        return stringRedisTemplate.opsForValue().get(key);
+    }
 
-	/**
-	 * delete cache by key
-	 * 
-	 * @param key
-	 */
-	public void delete(String key) {
-		redisTemplate.delete(key);
-	}
+    /**
+     * get object cache by key
+     *
+     * @param key
+     * @return
+     */
+    public Object getValueOfObject(String key) {
+        return redisTemplate.opsForValue().get(key);
+    }
 
-	/**
-	 * check if key exist
-	 * 
-	 * @param key
-	 * @return
-	 */
-	public boolean exists(String key) {
-		return redisTemplate.hasKey(key);
-	}
+    /**
+     * delete cache by key
+     *
+     * @param key
+     */
+    public void delete(String key) {
+        redisTemplate.delete(key);
+    }
+
+    /**
+     * check if key exist
+     *
+     * @param key
+     * @return
+     */
+    public boolean exists(String key) {
+        return redisTemplate.hasKey(key);
+    }
+
 }

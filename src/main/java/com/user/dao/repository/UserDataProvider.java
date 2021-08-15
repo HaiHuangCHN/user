@@ -1,7 +1,5 @@
 package com.user.dao.repository;
 
-import java.sql.Timestamp;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,15 +12,8 @@ import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.user.dao.entity.Address;
-import com.user.dao.entity.Profile;
-import com.user.dao.entity.SexEnum;
 import com.user.dao.entity.User;
-import com.user.domain.dto.request.AddUserReq;
-import com.user.domain.dto.request.AddressReq;
-import com.user.exception.ErrorResponseException;
-import com.user.service.UserService;
-import com.user.util.MD5Util;
+import com.user.service.IUserService;
 import com.user.util.RedisCacheUtil;
 
 /**
@@ -33,7 +24,7 @@ import com.user.util.RedisCacheUtil;
 @Service
 public class UserDataProvider {
 
-    private static final Logger log = LoggerFactory.getLogger(UserService.class);
+    private static final Logger log = LoggerFactory.getLogger(IUserService.class);
 
     @Autowired
     private UserRepository userRepository;

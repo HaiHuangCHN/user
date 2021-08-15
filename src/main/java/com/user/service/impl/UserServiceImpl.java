@@ -1,50 +1,45 @@
-package com.user.service;
+package com.user.service.impl;
 
-import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-
-import javax.persistence.EntityManager;
-
-import org.hibernate.exception.ConstraintViolationException;
+import com.user.costant.ErrorCodeEnum;
+import com.user.dao.entity.Address;
+import com.user.dao.entity.Profile;
+import com.user.dao.entity.User;
+import com.user.dao.repository.*;
+import com.user.domain.dto.request.AddUserReq;
+import com.user.domain.dto.request.LoginReq;
+import com.user.domain.dto.response.AddressResp;
+import com.user.domain.dto.response.ProfileInfo;
+import com.user.domain.dto.response.ProfileResp;
+import com.user.domain.dto.response.TestResp;
+import com.user.exception.BusinessException;
+import com.user.exception.InputParameterException;
+import com.user.service.IUserService;
+import com.user.util.JwtUtils;
+import com.user.util.MD5Util;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.Errors;
 
-import com.user.costant.Constants;
-import com.user.costant.ErrorCodeEnum;
-import com.user.dao.entity.Address;
-import com.user.dao.entity.Profile;
-import com.user.dao.entity.SexEnum;
-import com.user.dao.entity.User;
-import com.user.dao.repository.AddressRepository;
-import com.user.dao.repository.ProfileArchRepository;
-import com.user.dao.repository.ProfileRepository;
-import com.user.dao.repository.UserDataProvider;
-import com.user.dao.repository.UserRepository;
-import com.user.domain.dto.request.AddUserReq;
-import com.user.domain.dto.request.AddressReq;
-import com.user.domain.dto.request.LoginReq;
-import com.user.domain.dto.response.AddressResp;
-import com.user.domain.dto.response.ProfileInfo;
-import com.user.domain.dto.response.ProfileResp;
-import com.user.domain.dto.response.TestResp;
-import com.user.exception.ErrorResponseException;
-import com.user.exception.InputParameterException;
-import com.user.util.JwtUtils;
-import com.user.util.MD5Util;
+import javax.persistence.EntityManager;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
+/**
+ * UserService Implementation
+ *
+ * @author hai.huang.a@outlook.com
+ * @date 2021-08-01 15:25:35
+ */
 @Service
-public class UserService {
+public class UserServiceImpl implements IUserService {
 
-    private static final Logger logger = LoggerFactory.getLogger(UserService.class);
+    private static final Logger logger = LoggerFactory.getLogger(IUserService.class);
 
     @Autowired
     private UserRepository userRepository;
@@ -64,6 +59,7 @@ public class UserService {
     @Autowired
     private EntityManager entityManager;
 
+    @Override
     public void validateInboundRequest(Errors errors) throws InputParameterException {
         if (errors.hasErrors()) {
             String errorsMsg = errors.getAllErrors().stream().map(x -> x.getDefaultMessage()).reduce((join, x) -> join + ", " + x).get();
@@ -72,34 +68,38 @@ public class UserService {
         }
     }
 
+    @Override
     @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.REPEATABLE_READ, rollbackFor = Exception.class)
-    public boolean add(AddUserReq addUserReq) throws ErrorResponseException {
+    public boolean add(AddUserReq addUserReq) throws BusinessException {
+        logger.info("Calling...");
+        throw new BusinessException("001", "Test Retry", "Test Retry");
 //        userDataProvider.add(addUserReq);
-        String encodePassword = MD5Util.uppercaseMD5(addUserReq.getPassword());
-        User user = new User(addUserReq.getUsername(), encodePassword);
-        userRepository.save(user);
-        Profile profile = new Profile();
-        profile.setUser(user);
-        profile.setSex(SexEnum.valueOf(addUserReq.getNewProfileReq().getSex()));
-        profile.setEmail(addUserReq.getNewProfileReq().getEmail());
-        profile.setPhoneNum(addUserReq.getNewProfileReq().getPhoneNum());
-        profileRepository.save(profile);// save user object is enough
-        if (addUserReq.getNewProfileReq().getAddressReqList() != null) {
-            for (AddressReq address : addUserReq.getNewProfileReq().getAddressReqList()) {
-                Address addressDb = new Address();
-                addressDb.setProfile(profile);
-                addressDb.setCountry(address.getCountry());
-                addressDb.setProvience(address.getProvience());
-                addressDb.setCity(address.getCity());
-                addressDb.setDistrict(address.getDistrict());
-                addressDb.setDetailAddress(address.getDetailAddress());
-                addressDb.setPostcode(address.getPostcode());
-                addressRepository.save(addressDb);// save user object is enough
-            }
-        }
-        return true;
+//        String encodePassword = MD5Util.uppercaseMD5(addUserReq.getPassword());
+//        User user = new User(addUserReq.getUsername(), encodePassword);
+//        userRepository.save(user);
+//        Profile profile = new Profile();
+//        profile.setUser(user);
+//        profile.setSex(SexEnum.valueOf(addUserReq.getNewProfileReq().getSex()));
+//        profile.setEmail(addUserReq.getNewProfileReq().getEmail());
+//        profile.setPhoneNum(addUserReq.getNewProfileReq().getPhoneNum());
+//        profileRepository.save(profile);// save user object is enough
+//        if (addUserReq.getNewProfileReq().getAddressReqList() != null) {
+//            for (AddressReq address : addUserReq.getNewProfileReq().getAddressReqList()) {
+//                Address addressDb = new Address();
+//                addressDb.setProfile(profile);
+//                addressDb.setCountry(address.getCountry());
+//                addressDb.setProvience(address.getProvience());
+//                addressDb.setCity(address.getCity());
+//                addressDb.setDistrict(address.getDistrict());
+//                addressDb.setDetailAddress(address.getDetailAddress());
+//                addressDb.setPostcode(address.getPostcode());
+//                addressRepository.save(addressDb);// save user object is enough
+//            }
+//        }
+//        return true;
     }
 
+    @Override
     @Transactional(rollbackFor = Exception.class)
     public Boolean login(LoginReq loginReq) {
         String encodePassword = MD5Util.uppercaseMD5(loginReq.getPassword());
@@ -111,6 +111,7 @@ public class UserService {
         return isSuccessful;
     }
 
+    @Override
     public ProfileResp displayProfile(String username) {
         ProfileResp profileResp = new ProfileResp();
 
@@ -152,15 +153,16 @@ public class UserService {
         return profileResp;
     }
 
+    @Override
     @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.READ_COMMITTED, rollbackFor = Exception.class)
-    public boolean deleteProfile(LoginReq loginReq) throws ErrorResponseException {
+    public boolean deleteProfile(LoginReq loginReq) throws BusinessException {
         String encodePassword = MD5Util.uppercaseMD5(loginReq.getPassword());
         User user = userRepository.findByUsernameAndPassword(loginReq.getUsername(), encodePassword);
         if (user != null) {
             userRepository.delete(user);
             return true;
         } else {
-            throw new ErrorResponseException(ErrorCodeEnum.INVALID_USER.getSelfDefinedCode(), ErrorCodeEnum.INVALID_USER.getMessage(), ErrorCodeEnum.INVALID_USER.getDetail());
+            throw new BusinessException(ErrorCodeEnum.INVALID_USER.getSelfDefinedCode(), ErrorCodeEnum.INVALID_USER.getMessage(), ErrorCodeEnum.INVALID_USER.getDetail());
         }
     }
 

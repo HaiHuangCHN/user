@@ -4,37 +4,36 @@ import com.user.costant.Constants;
 import com.user.domain.dto.request.AddUserReq;
 import com.user.domain.dto.request.LoginReq;
 import com.user.domain.dto.response.ProfileResp;
-import com.user.exception.ErrorResponseException;
+import com.user.exception.BusinessException;
 import com.user.exception.InputParameterException;
-import com.user.service.UserService;
+import com.user.service.IUserService;
 import io.swagger.annotations.*;
 import org.apache.http.HttpStatus;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.validation.Errors;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
-@Controller
+@RestController
 @RequestMapping(path = "/profile")
 @Api(tags = "Profile API")
 public class UserController {
 
     @Autowired
-    private UserService userService;
+    private IUserService userService;
 
     private static final Logger logger = LogManager.getLogger(UserController.class);
 
     @ApiOperation(value = "Create a new user", notes = "Only when the user is new to the system does it succeed to create, or will fail")
     @ApiResponses(value = { @ApiResponse(code = HttpStatus.SC_OK, message = Constants.SUCCESS, response = Boolean.class),
-            @ApiResponse(code = HttpStatus.SC_INTERNAL_SERVER_ERROR, message = Constants.ERROR_RESPONSE, response = ErrorResponseException.class) })
+            @ApiResponse(code = HttpStatus.SC_INTERNAL_SERVER_ERROR, message = Constants.ERROR_RESPONSE, response = BusinessException.class) })
     @PostMapping(value = "/add", consumes = { "application/json" }, produces = { "application/json" })
-    public @ResponseBody boolean addUser(@Valid @RequestBody AddUserReq addUserReq, Errors errors) throws ErrorResponseException, InputParameterException {
+    public @ResponseBody boolean addUser(@Validated @RequestBody final AddUserReq addUserReq) throws BusinessException, InputParameterException {
 //        profileService.validateInboundRequest(errors);
         Boolean result = userService.add(addUserReq);
 //		if (true) {
@@ -44,7 +43,7 @@ public class UserController {
     }
 
     @ApiResponses(value = { @ApiResponse(code = HttpStatus.SC_OK, message = Constants.SUCCESS, response = Boolean.class),
-            @ApiResponse(code = HttpStatus.SC_INTERNAL_SERVER_ERROR, message = Constants.ERROR_RESPONSE, response = ErrorResponseException.class) })
+            @ApiResponse(code = HttpStatus.SC_INTERNAL_SERVER_ERROR, message = Constants.ERROR_RESPONSE, response = BusinessException.class) })
     @RequestMapping(value = "/login", method = RequestMethod.POST)
     public @ResponseBody Boolean login(@RequestBody LoginReq loginReq) {
         return userService.login(loginReq);
@@ -52,7 +51,7 @@ public class UserController {
 
     @ApiOperation(value = "Get a user", notes = "To find a user by username")
     @ApiResponses(value = { @ApiResponse(code = HttpStatus.SC_OK, message = Constants.SUCCESS, response = ProfileResp.class),
-            @ApiResponse(code = HttpStatus.SC_INTERNAL_SERVER_ERROR, message = Constants.ERROR_RESPONSE, response = ErrorResponseException.class) })
+            @ApiResponse(code = HttpStatus.SC_INTERNAL_SERVER_ERROR, message = Constants.ERROR_RESPONSE, response = BusinessException.class) })
     @ApiImplicitParams({
             @ApiImplicitParam(name = "username", value = "Username of the account", example = "Huang, Hai", paramType = "path", defaultValue = "default username", required = true),
             @ApiImplicitParam(name = "id", value = "ID of the user", example = "1", dataType = "int", defaultValue = "1", required = false) })

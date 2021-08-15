@@ -1,6 +1,6 @@
 package com.user.exception;
 
-public class ApplicationException extends Exception {
+public class SystemException extends RuntimeException {
     /**
      *
      */
@@ -10,7 +10,7 @@ public class ApplicationException extends Exception {
 
     private String detail;
 
-    public ApplicationException(String message, String detail) {
+    public SystemException(String message, String detail) {
         this.message = message;
         this.detail = message;
     }

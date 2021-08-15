@@ -2,6 +2,8 @@ package com.user.costant;
 
 /**
  * Disable setter as we want ALL the fields to be something like hard code
+ *
+ * TODO Move to Exception?
  */
 public enum ErrorCodeEnum {
 	INVALID_USER(200, "PF_001", "Invalid user", ""),

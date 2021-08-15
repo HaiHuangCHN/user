@@ -4,6 +4,7 @@ import java.math.BigInteger;
 import java.security.MessageDigest;
 
 public class MD5Util {
+
 	/**
 	 * Encode String(lowercase + digit)
 	 *
@@ -21,9 +22,8 @@ public class MD5Util {
 			 * TODO Why update???
 			 */
 			mdInst.update(btInput);
-			// digest() return MD5 hash value(Octal byte), but actually MD hash value should
+			// digest() return MD5 hash value(Octal byte), but actually MD5 hash value should
 			// be hexadecimal byte
-			// hexadecimal
 			// So use BigInteger change it into hexadecimal
 			byte[] md = mdInst.digest();
 			System.out.println("md: " + md);// Stub

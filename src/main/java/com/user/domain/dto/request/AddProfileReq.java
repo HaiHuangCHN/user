@@ -1,10 +1,10 @@
 package com.user.domain.dto.request;
 
-import java.util.List;
+import com.user.util.AgeAnno;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
+import java.util.List;
 
 public class AddProfileReq {
 
@@ -12,10 +12,10 @@ public class AddProfileReq {
 
     private String email;
 
-    @NotNull
-    @Size(message = "Sex should be valid")
+    @NotNull(message = "Sex cannot be null")
     private String sex;
 
+    @AgeAnno(message = "Age is not valid")
     private Integer age;
 
     private Boolean isMarried;

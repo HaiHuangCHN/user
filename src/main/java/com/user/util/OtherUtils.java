@@ -8,7 +8,6 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import javax.crypto.Mac;
@@ -19,7 +18,7 @@ import org.apache.commons.codec.binary.Base64;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
-import com.user.exception.ApplicationException;
+import com.user.exception.SystemException;
 
 public class OtherUtils {
 
@@ -105,9 +104,9 @@ public class OtherUtils {
 	 * 
 	 * @param key key, str message
 	 * @return str encode
-	 * @throws ApplicationException
+	 * @throws SystemException
 	 */
-	public String encodeBase64(String key, String message) throws ApplicationException {
+	public String encodeBase64(String key, String message) throws SystemException {
 		try {
 			Mac sha256_HMAC = Mac.getInstance("HmacSHA256");
 			SecretKeySpec secret_key = new SecretKeySpec(key.getBytes("UTF-8"), "HmacSHA256");
@@ -115,7 +114,7 @@ public class OtherUtils {
 			String encode = Base64.encodeBase64String(sha256_HMAC.doFinal(message.getBytes("UTF-8")));
 			return encode;
 		} catch (Exception e) {
-			throw new ApplicationException(e.getMessage(), "Failed to encode sign string");
+			throw new SystemException(e.getMessage(), "Failed to encode sign string");
 		}
 	}
 

@@ -27,7 +27,6 @@ import com.user.dao.repository.UserDataProvider;
 import com.user.dao.repository.UserRepository;
 import com.user.service.AsyncExecutor;
 
-// TODO Rename into ArchiveRecordTest
 @Service
 public class ArchiveRecordTest {
 

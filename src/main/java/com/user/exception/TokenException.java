@@ -1,5 +1,6 @@
 package com.user.exception;
 
+@Deprecated
 public class TokenException extends Exception {
 
     /**

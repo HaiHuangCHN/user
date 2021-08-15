@@ -1,8 +1,7 @@
 package com.user.exception;
 
 import com.user.costant.Constants;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -10,22 +9,22 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 @ControllerAdvice
+// @Slf4j is with the same log output compared to the traditional style
+@Slf4j
 public class GlobalControllerExceptionHandler {
-
-    private static final Logger logger = LoggerFactory.getLogger(GlobalControllerExceptionHandler.class);
 
     @ExceptionHandler(value = Exception.class)
     @ResponseBody
     public ResponseEntity<Object> errorHandler(Exception e) throws Exception {
-        logger.error(e.getMessage(), e);
+        log.error(e.getMessage(), e);
         ErrorBody errorBody = new ErrorBody();
         HttpStatus httpStatus = null;
-        if (e instanceof ErrorResponseException) {
+        if (e instanceof BusinessException) {
             httpStatus = HttpStatus.BAD_REQUEST;
             errorBody.setSource(Constants.SOURCE);
-            errorBody.setCode(((ErrorResponseException) e).getCode());
-            errorBody.setMessage(((ErrorResponseException) e).getMessage());
-            errorBody.setDetail(((ErrorResponseException) e).getDetail());
+            errorBody.setCode(((BusinessException) e).getCode());
+            errorBody.setMessage(((BusinessException) e).getMessage());
+            errorBody.setDetail(((BusinessException) e).getDetail());
         } else if (e instanceof InputParameterException) {
             httpStatus = HttpStatus.BAD_REQUEST;
             errorBody.setSource(Constants.SOURCE);
@@ -41,7 +40,7 @@ public class GlobalControllerExceptionHandler {
         } else {
             httpStatus = HttpStatus.BAD_REQUEST;
             errorBody.setSource(Constants.SOURCE);
-            errorBody.setMessage(Constants.UNEXPECTED_ERROR + " : " + e.getMessage());
+            errorBody.setMessage(Constants.UNEXPECTED_ERROR + ": " + e.getMessage());
         }
         return ResponseEntity.status(httpStatus).body(errorBody);
     }

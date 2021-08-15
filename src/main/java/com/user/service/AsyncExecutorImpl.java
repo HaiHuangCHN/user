@@ -1,8 +1,6 @@
 package com.user.service;
 
 import java.util.List;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutorService;
 
 import javax.persistence.EntityManager;
 
@@ -24,7 +22,7 @@ import com.user.dao.repository.UserRepository;
 @Service
 public class AsyncExecutorImpl implements AsyncExecutor {
 
-    private static final Logger logger = LoggerFactory.getLogger(UserService.class);
+    private static final Logger logger = LoggerFactory.getLogger(IUserService.class);
 
     @Autowired
     private UserRepository userRepository;

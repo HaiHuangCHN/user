@@ -6,12 +6,12 @@ import java.util.List;
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
-public class PossibleValuesCheckAnnoValidator implements ConstraintValidator<PossibleValuesCheckAnno, String> {
+public class AllowedValuesValidator implements ConstraintValidator<AllowedValues, String> {
     private String constraintAnnotation;
 
     @Override
-    public void initialize(PossibleValuesCheckAnno constraintAnnotation) {
-        this.constraintAnnotation = constraintAnnotation.possibleValues();
+    public void initialize(AllowedValues constraintAnnotation) {
+        this.constraintAnnotation = constraintAnnotation.allowedValues();
     }
 
     @Override

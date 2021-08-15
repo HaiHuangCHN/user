@@ -1,6 +1,6 @@
 package com.user.exception;
 
-public class ErrorResponseException extends Exception {
+public class BusinessException extends RuntimeException {
 	/**
 	 * 
 	 */
@@ -12,7 +12,7 @@ public class ErrorResponseException extends Exception {
 
 	private String detail;
 
-	public ErrorResponseException(String code, String message, String detail) {
+	public BusinessException(String code, String message, String detail) {
 		this.code = code;
 		this.message = message;
 		this.detail = detail;
