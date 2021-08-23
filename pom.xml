@@ -3,8 +3,8 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
-	<groupId>com.common</groupId>
-	<artifactId>user</artifactId>
+	<groupId>com.nice</groupId>
+	<artifactId>user-center</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
@@ -16,7 +16,6 @@
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-<!-- 		<datasource-proxy.version>1.4.1</datasource-proxy.version> -->
 	</properties>
 	<dependencies>
 
