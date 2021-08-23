@@ -26,6 +26,7 @@ public class MD5Util {
 			// be hexadecimal byte
 			// So use BigInteger change it into hexadecimal
 			byte[] md = mdInst.digest();
+			// Equal way: MessageDigest.getInstance("md5").digest(btInput);
 			System.out.println("md: " + md);// Stub
 			BigInteger bigInteger = new BigInteger(1, md);
 			System.out.println("decimal: " + bigInteger.toString());// Stub
