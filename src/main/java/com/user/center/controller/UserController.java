@@ -59,9 +59,9 @@ public class UserController {
     @Transactional(rollbackFor = Exception.class)
     public ResponseEntity<ProfileResp> displayProfile(@PathVariable("username") String username, @PathVariable("id") Integer id) {
         ProfileResp profileResp = userService.displayProfile(username);
-//		stub: can be removed
+//		// Test
 //		profileResp.setSign("1234567897946565461321321");
-//		stub: can be removed
+//		// Test
 //		profileResp.setEmail("Attacked");
         logger.info(profileResp);
         // Way 1:
