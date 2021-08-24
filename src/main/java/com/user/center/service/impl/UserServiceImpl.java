@@ -64,14 +64,17 @@ public class UserServiceImpl implements IUserService {
     @Override
     public void validateInboundRequest(Errors errors) throws InputParameterException {
         if (errors.hasErrors()) {
-            String errorsMsg = errors.getAllErrors().stream().map(x -> x.getDefaultMessage()).reduce((join, x) -> join + ", " + x).get();
+            String errorsMsg =
+                    errors.getAllErrors().stream().map(x -> x.getDefaultMessage()).reduce((join, x) -> join + ", " + x).get();
             logger.error("errorCode: " + ErrorCodeEnum.INCOMPLETE_REQUEST_BODY.getSelfDefinedCode());
-            throw new InputParameterException(ErrorCodeEnum.INCOMPLETE_REQUEST_BODY.getSelfDefinedCode(), ErrorCodeEnum.INCOMPLETE_REQUEST_BODY.getMessage(), errorsMsg);
+            throw new InputParameterException(ErrorCodeEnum.INCOMPLETE_REQUEST_BODY.getSelfDefinedCode(),
+                    ErrorCodeEnum.INCOMPLETE_REQUEST_BODY.getMessage(), errorsMsg);
         }
     }
 
     @Override
-    @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.REPEATABLE_READ, rollbackFor = Exception.class)
+    @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.REPEATABLE_READ, rollbackFor =
+            Exception.class)
     public boolean add(AddUserDetailReq addUserDetailReq) throws BusinessException {
 //        // Test retry
 //        logger.info("Calling...");
@@ -153,7 +156,8 @@ public class UserServiceImpl implements IUserService {
     }
 
     @Override
-    @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.READ_COMMITTED, rollbackFor = Exception.class)
+    @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.READ_COMMITTED, rollbackFor =
+            Exception.class)
     public boolean deleteProfile(LoginReq loginReq) throws BusinessException {
         String encodePassword = MD5Util.uppercaseMD5(loginReq.getPassword());
         UserDetail userDetail = userRepository.findByUsernameAndPassword(loginReq.getUsername(), encodePassword);
@@ -161,7 +165,8 @@ public class UserServiceImpl implements IUserService {
             userRepository.delete(userDetail);
             return true;
         } else {
-            throw new BusinessException(ErrorCodeEnum.INVALID_USER.getSelfDefinedCode(), ErrorCodeEnum.INVALID_USER.getMessage(), ErrorCodeEnum.INVALID_USER.getDetail());
+            throw new BusinessException(ErrorCodeEnum.INVALID_USER.getSelfDefinedCode(),
+                    ErrorCodeEnum.INVALID_USER.getMessage(), ErrorCodeEnum.INVALID_USER.getDetail());
         }
     }
 

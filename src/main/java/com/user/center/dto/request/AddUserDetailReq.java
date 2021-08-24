@@ -7,6 +7,7 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 
 @ApiModel(value = "New User request body", description = "Information to create a new user")
 @Data
@@ -16,8 +17,10 @@ public class AddUserDetailReq {
     @AllowedValues(message = "Source value is not in scope", allowedValues = "EXT,ext,INT,int")
     private String source;
 
+    @NotNull
     private String username;
 
+    @NotNull
     private String password;
 
     @Valid
