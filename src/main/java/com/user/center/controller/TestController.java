@@ -33,6 +33,9 @@ public class TestController {
 
     private static final Logger logger = LogManager.getLogger(TestController.class);
 
+    // test1
+    //  test2
+    // test3
     @Value("#{'${test.list}'.split(',')}")
     private List<String> strList;
 
@@ -150,6 +153,9 @@ public class TestController {
 
         // Test stub
         logger.info(strList);
+        logger.info(strList.get(0));
+        logger.info(strList.get(1));
+        logger.info(strList.get(2));
 
         return "OK";
     }
