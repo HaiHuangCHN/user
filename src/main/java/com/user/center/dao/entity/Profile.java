@@ -33,10 +33,10 @@ public class Profile extends BaseEntity implements Serializable {
 
     @Column(name = "email", length = 50)
     @Size(max = 50, message = "email exceed length constraint")
-    @Email(message = "Email is not valid")
+    @Email(message = "email is not valid")
     private String email = "test@mail.com";
 
-    @Column(name = "sex")
+    @Column(name = "sex", nullable = false)
     @Enumerated(EnumType.STRING)
     @NotNull(message = "sex cannot be null")
     private SexEnum sex;

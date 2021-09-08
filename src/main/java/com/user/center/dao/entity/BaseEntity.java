@@ -12,6 +12,12 @@ public class BaseEntity {
 
 
     /**
+     * 0 - Deleted, 1 - Not Deleted
+     */
+    @Column(name = "yn", nullable = false)
+    private Boolean yn;
+
+    /**
      * Created by who
      */
     @Column(name = "created_by", nullable = false)
@@ -34,6 +40,14 @@ public class BaseEntity {
      */
     @Column(name = "updated_at", nullable = false)
     private LocalDateTime updatedAt;
+
+    public Boolean getYn() {
+        return yn;
+    }
+
+    public void setYn(Boolean yn) {
+        this.yn = yn;
+    }
 
     public String getCreatedBy() {
         return createdBy;

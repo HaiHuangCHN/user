@@ -28,6 +28,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.Errors;
 
 import javax.persistence.EntityManager;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -79,14 +80,25 @@ public class UserServiceImpl implements IUserService {
 //        // Test retry
 //        logger.info("Calling...");
 //        throw new BusinessException("001", "Test Retry", "Test Retry");
+        LocalDateTime currentDatetime = LocalDateTime.now();
         String encodePassword = MD5Util.uppercaseMD5(addUserDetailReq.getPassword());
         UserDetail userDetail = new UserDetail(addUserDetailReq.getUsername(), encodePassword);
+        userDetail.setCreatedAt(currentDatetime);
+        userDetail.setYn(true);
+        userDetail.setCreatedBy("system");
+        userDetail.setUpdatedAt(currentDatetime);
+        userDetail.setUpdatedBy("system");
         userRepository.save(userDetail);
         Profile profile = new Profile();
         profile.setUser(userDetail);
         profile.setSex(SexEnum.valueOf(addUserDetailReq.getNewProfileReq().getSex()));
         profile.setEmail(addUserDetailReq.getNewProfileReq().getEmail());
         profile.setPhoneNum(addUserDetailReq.getNewProfileReq().getPhoneNum());
+        profile.setYn(true);
+        profile.setCreatedAt(currentDatetime);
+        profile.setCreatedBy("system");
+        profile.setUpdatedAt(currentDatetime);
+        profile.setUpdatedBy("system");
         profileRepository.save(profile);// Save user object is enough, if Cascade is enable
         if (addUserDetailReq.getNewProfileReq().getAddressReqList() != null) {
             for (AddressReq address : addUserDetailReq.getNewProfileReq().getAddressReqList()) {
@@ -98,6 +110,11 @@ public class UserServiceImpl implements IUserService {
                 addressDb.setDistrict(address.getDistrict());
                 addressDb.setDetailAddress(address.getDetailAddress());
                 addressDb.setPostcode(address.getPostcode());
+                addressDb.setYn(true);
+                addressDb.setCreatedAt(currentDatetime);
+                addressDb.setCreatedBy("system");
+                addressDb.setUpdatedAt(currentDatetime);
+                addressDb.setUpdatedBy("system");
                 addressRepository.save(addressDb);// Save user object is enough, if Cascade is enable
             }
         }

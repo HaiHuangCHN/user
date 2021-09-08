@@ -25,18 +25,18 @@ public class UserDetail extends BaseEntity implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(name = "username")
+    @Column(name = "username", nullable = false)
     @Size(min = 1, max = 255, message = "username exceed length constraint")
     private String username;
 
-    @Column(name = "password")
+    @Column(name = "password", nullable = false)
     @Size(min = 1, max = 255, message = "password exceed length constraint")
     private String password;
 
     /**
      * TODO Will default value has impact on update action, wrongly update into false?
      */
-    @Column(name = "private_account")
+    @Column(name = "private_account", nullable = false)
     private Boolean privateAccount = false;
 
     @OneToOne(mappedBy = "userDetail", cascade = CascadeType.REMOVE, fetch = FetchType.EAGER)

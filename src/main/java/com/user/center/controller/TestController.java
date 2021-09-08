@@ -33,6 +33,9 @@ public class TestController {
 
     private static final Logger logger = LogManager.getLogger(TestController.class);
 
+    @Value("#{'${test.list}'.split(',')}")
+    private List<String> strList;
+
     @Autowired
     private UserRepository userRepository;
 
@@ -144,6 +147,9 @@ public class TestController {
 
         // Test stub
         logger.info(TEST_TEST_TEST.toString());
+
+        // Test stub
+        logger.info(strList);
 
         return "OK";
     }

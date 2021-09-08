@@ -12,6 +12,7 @@ import org.apache.http.HttpStatus;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.Errors;
@@ -60,7 +61,7 @@ public class UserController {
     public @ResponseBody
     boolean addUser(@Validated @RequestBody final AddUserDetailReq addUserDetailReq, Errors errors) throws BusinessException, InputParameterException {
         userService.validateInboundRequest(errors);
-//        Boolean result = userService.add(addUserDetailReq);
+        Boolean result = userService.add(addUserDetailReq);
 //		if (true) {
 //			rabbmitMqSenderService.send();
 //		}
@@ -88,7 +89,7 @@ public class UserController {
             @ApiImplicitParam(name = "id", value = "ID of the user", example = "1", dataType = "int", defaultValue =
                     "1", required = false)})
     @RequestMapping(value = "/{username}/{id}", method = RequestMethod.GET)
-    @Transactional(rollbackFor = Exception.class)
+    @Transactional(rollbackFor = Exception.class)// TODO remove it!
     public ResponseEntity<ProfileResp> displayProfile(@PathVariable("username") String username,
                                                       @PathVariable("id") Integer id) {
         ProfileResp profileResp = userService.displayProfile(username);

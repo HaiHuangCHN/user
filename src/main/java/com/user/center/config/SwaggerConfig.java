@@ -229,7 +229,7 @@ public class SwaggerConfig {
     }
 
     private ApiInfo apiInfo() {
-        return new ApiInfoBuilder().title("User API").description("Application to handle any request of user profile. To get more info: https://github.com/HaiHuangCHN/profile")
+        return new ApiInfoBuilder().title("User Center").description("Application to handle any request of user profile. To get more info: https://github.com/HaiHuangCHN/profile")
                 .termsOfServiceUrl("http://www.online.shopping.com").contact(new Contact("hai.huang.a@outlook.com", "", "")).version("1.0").build();
     }
 
