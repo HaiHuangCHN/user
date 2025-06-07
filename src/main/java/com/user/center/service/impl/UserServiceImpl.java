@@ -137,7 +137,7 @@ public class UserServiceImpl implements IUserService {
     public ProfileResp displayProfile(String username) {
         ProfileResp profileResp = new ProfileResp();
 
-        UserDetail userDetail = userDataProvider.findByUsername(username);
+        UserDetail userDetail = userDataProvider.findByUsername();
         Profile profileDb = userDetail.getProfile();
         Collection<Address> addressList = profileDb.getAddressList();
 

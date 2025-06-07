@@ -1,4 +1,4 @@
-package com.user.center.util;
+package com.user.center.util.validation;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -9,6 +9,7 @@ import java.time.format.DateTimeFormatter;
 
 @Slf4j
 public class DayAfterValidator implements ConstraintValidator<DayAfter, String> {
+
 
     private int dayAfter;
 
@@ -39,5 +40,6 @@ public class DayAfterValidator implements ConstraintValidator<DayAfter, String> 
 
         return true;
     }
+
 
 }

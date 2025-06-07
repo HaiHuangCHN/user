@@ -1,14 +1,8 @@
-package com.user.center.util;
-
-import java.lang.annotation.Documented;
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Inherited;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+package com.user.center.util.validation;
 
 import javax.validation.Constraint;
 import javax.validation.Payload;
+import java.lang.annotation.*;
 
 /**
  * Bean validation annotation to check allowed values
@@ -19,6 +13,7 @@ import javax.validation.Payload;
 @Retention(RetentionPolicy.RUNTIME)
 @Constraint(validatedBy = { AllowedValuesValidator.class })
 public @interface AllowedValues {
+
 
     /**
      * Message
@@ -37,4 +32,6 @@ public @interface AllowedValues {
     Class<?>[] groups() default {};
 
     Class<? extends Payload>[] payload() default {};
+
+
 }

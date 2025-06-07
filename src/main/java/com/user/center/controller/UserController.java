@@ -34,7 +34,13 @@ public class UserController {
     /**
      * Note:
      * Won't do validation:
-     *            @RequestBody final AddUserDetailReq addUserDetailReq
+     *
+     * @param addUserDetailReq
+     * @param errors
+     * @return
+     * @throws BusinessException
+     * @throws InputParameterException
+     * @RequestBody final AddUserDetailReq addUserDetailReq
      * <p>
      * Will do validation and throw MethodArgumentNotValidException
      * @Validated @RequestBody final AddUserDetailReq addUserDetailReq
@@ -45,12 +51,6 @@ public class UserController {
      * Will do validation and throw Exception:
      * @Validated @RequestBody final AddUserDetailReq addUserDetailReq, Errors errors
      * userService.validateInboundRequest(errors);
-     *
-     * @param addUserDetailReq
-     * @param errors
-     * @return
-     * @throws BusinessException
-     * @throws InputParameterException
      */
     @ApiOperation(value = "Create a new user", notes = "Only when the user is new to the system does it succeed to " +
             "create, or will fail")
@@ -88,7 +88,7 @@ public class UserController {
                     paramType = "path", defaultValue = "default username", required = true),
             @ApiImplicitParam(name = "id", value = "ID of the user", example = "1", dataType = "int", defaultValue =
                     "1", required = false)})
-    @RequestMapping(value = "/{username}/{id}", method = RequestMethod.GET)
+    @GetMapping(value = "/{username}/{id}")
     @Transactional(rollbackFor = Exception.class)// TODO remove it!
     public ResponseEntity<ProfileResp> displayProfile(@PathVariable("username") String username,
                                                       @PathVariable("id") Integer id) {

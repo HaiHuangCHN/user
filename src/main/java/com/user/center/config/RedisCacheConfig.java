@@ -48,7 +48,7 @@ public class RedisCacheConfig extends CachingConfigurerSupport {
 //
 
     @Bean
-    public CacheManager cacheManager(RedisConnectionFactory lettuceConnectionFactory) {
+    public CacheManager cacheManager(RedisConnectionFactory redisConnectionFactory) {
         RedisCacheConfiguration defaultCacheConfig = RedisCacheConfiguration.defaultCacheConfig();
         // Set default expire time
         defaultCacheConfig = defaultCacheConfig.entryTtl(Duration.ofSeconds(defaultExpireTime))
@@ -56,7 +56,7 @@ public class RedisCacheConfig extends CachingConfigurerSupport {
                 // exception etc.
                 .disableCachingNullValues();
 
-        return RedisCacheManager.builder(lettuceConnectionFactory).cacheDefaults(defaultCacheConfig).build();
+        return RedisCacheManager.builder(redisConnectionFactory).cacheDefaults(defaultCacheConfig).build();
     }
 
     @Bean
@@ -80,15 +80,12 @@ public class RedisCacheConfig extends CachingConfigurerSupport {
         redisTemplate.setConnectionFactory(redisConnectionFactory);
 
         // Use Jackson2JsonRedisSerializer to serialize & deserialize value
-        Jackson2JsonRedisSerializer<Object> jacksonSerializer = new Jackson2JsonRedisSerializer<Object>(Object.class);
+        Jackson2JsonRedisSerializer<Object> jacksonSerializer = new Jackson2JsonRedisSerializer<>(Object.class);
         ObjectMapper om = new ObjectMapper();
         om.setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.ANY);
         om.enableDefaultTyping(ObjectMapper.DefaultTyping.NON_FINAL);
         jacksonSerializer.setObjectMapper(om);
         redisTemplate.setValueSerializer(jacksonSerializer);
-        // Use StringRedisSerializer to serialize & deserialize key
-        // And StringRedisSerializer: Creates a new StringRedisSerializer using UTF-8.
-        redisTemplate.setKeySerializer(new StringRedisSerializer());
         // Enable transaction
         redisTemplate.setEnableTransactionSupport(true);
         redisTemplate.afterPropertiesSet();
