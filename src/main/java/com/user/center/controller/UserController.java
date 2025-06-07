@@ -84,7 +84,7 @@ public class UserController {
             @ApiResponse(code = HttpStatus.SC_INTERNAL_SERVER_ERROR, message = Constants.ERROR_RESPONSE, response =
                     BusinessException.class)})
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "username", value = "Username of the account", example = "Huang, Hai",
+            @ApiImplicitParam(name = "username", value = "Username of the account", example = "hai.huang.a@outlook.com",
                     paramType = "path", defaultValue = "default username", required = true),
             @ApiImplicitParam(name = "id", value = "ID of the user", example = "1", dataType = "int", defaultValue =
                     "1", required = false)})

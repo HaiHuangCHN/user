@@ -1,4 +1,4 @@
-package com.user.center.config;
+package com.user.center.config.async;
 
 import java.util.concurrent.Executor;
 import java.util.concurrent.ThreadPoolExecutor;

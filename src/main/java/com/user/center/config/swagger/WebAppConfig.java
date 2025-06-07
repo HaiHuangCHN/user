@@ -1,4 +1,4 @@
-package com.user.center.config;
+package com.user.center.config.swagger;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
