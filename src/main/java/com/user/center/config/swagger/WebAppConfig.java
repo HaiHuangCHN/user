@@ -5,6 +5,9 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
+/**
+ * TODO hai 去掉会怎么样？静态文件会被限制吗？
+ */
 @Configuration
 @EnableWebMvc
 public class WebAppConfig implements WebMvcConfigurer {

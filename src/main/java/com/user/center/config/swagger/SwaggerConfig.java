@@ -93,12 +93,12 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 //	@Bean
 //	public Docket createRestApi() {
 //		return new Docket(DocumentationType.SWAGGER_2).apiInfo(apiInfo()).select()
-//				.apis(RequestHandlerSelectors.basePackage("com.profile.controller")).paths(PathSelectors.any())
+//				.apis(RequestHandlerSelectors.basePackage("com.user.center.controller")).paths(PathSelectors.any())
 //				.build().securitySchemes(Lists.newArrayList(apiKey()));
 //	}
 //
 //	private ApiInfo apiInfo() {
-//		return new ApiInfoBuilder().title(" RestApi Document").description("decription for api")
+//		return new ApiInfoBuilder().title("RestApi Document").description("decription for api")
 //				.termsOfServiceUrl("www.test.com").contact("lytech").version("1.0").build();
 //	}
 //
@@ -207,8 +207,8 @@ public class SwaggerConfig {
     }
 
     private ApiInfo apiInfo() {
-        return new ApiInfoBuilder().title("User Center").description("UserCenterApplication to handle any request of user. To get more info: https://github.com/HaiHuangCHN/profile")
-                .termsOfServiceUrl("http://www.online.shopping.com").contact(new Contact("hai.huang.a@outlook.com", "", "")).version("1.0").build();
+        return new ApiInfoBuilder().title("User Center").description("UserCenterApplication to handle any request of user profile. To get more info: https://github.com/HaiHuangCHN/user-center")
+                .termsOfServiceUrl("http://www.nice.com").contact(new Contact("hai.huang.a@outlook.com", "", "")).version("1.0").build();
     }
 
 }

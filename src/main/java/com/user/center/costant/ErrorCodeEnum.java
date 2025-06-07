@@ -20,10 +20,10 @@ public enum ErrorCodeEnum {
         this.detail = detail;
     }
 
-    public Integer httpStatusCode;
-    public String selfDefinedCode;
-    public String message;
-    public String detail;
+    private final Integer httpStatusCode;
+    private final String selfDefinedCode;
+    private final String message;
+    private final String detail;
 
     public int getHttpStatusCode() {
         return httpStatusCode;

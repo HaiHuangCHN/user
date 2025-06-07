@@ -8,6 +8,8 @@ import com.user.center.service.IUserService;
 import com.user.center.dto.request.AddUserDetailReq;
 import com.user.center.dto.request.LoginReq;
 import io.swagger.annotations.*;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.http.HttpStatus;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -23,13 +25,12 @@ import javax.validation.Valid;
 
 @RestController
 @RequestMapping(path = "/profile")
-@Api(tags = "Profile API")
+@Api(tags = "User Profile API")
+@Slf4j
+@RequiredArgsConstructor
 public class UserController {
 
-    @Autowired
-    private IUserService userService;
-
-    private static final Logger logger = LogManager.getLogger(UserController.class);
+    private final IUserService userService;
 
     /**
      * Note:
@@ -97,7 +98,7 @@ public class UserController {
 //		profileResp.setSign("1234567897946565461321321");
 //		// Test
 //		profileResp.setEmail("Attacked");
-        logger.info(profileResp);
+        log.info(profileResp);
         // Way 1:
 //		HttpHeaders headers = new HttpHeaders(); 
 //		headers.add("Cache-Control", "no-cache");

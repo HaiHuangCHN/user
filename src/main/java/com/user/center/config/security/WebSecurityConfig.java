@@ -26,9 +26,93 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 //}
 
 /**
- * Swagger 访问需认证
- *
+ * Way 1
+ * 
  * @author hai.huang.a@outlook.com
+ *
+ */
+//@Configuration
+//@EnableWebSecurity
+//public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
+//
+//	@Value("${enable.swagger.security}")
+//	private boolean enableSwaggerSecurity;
+//
+//	@Override
+//	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+//		auth.inMemoryAuthentication().passwordEncoder(new BCryptPasswordEncoder())
+//		.withUser("swagger_d0").password(new BCryptPasswordEncoder().encode("d0123456")).roles("d0")
+//		.and().withUser("swagger_t0").password(new BCryptPasswordEncoder().encode("t0123456")).roles("t0")
+//		.and().withUser("swagger_p0").password(new BCryptPasswordEncoder().encode("p0123456")).roles("p0");
+//	}
+//
+////	@Override
+////	protected void configure(HttpSecurity http) throws Exception {
+////		http.authorizeRequests().antMatchers("/profile/**").anonymous().anyRequest().authenticated().and().formLogin();
+////		http.csrf().disable();
+////	}
+//
+//	@Override
+//	protected void configure(HttpSecurity http) throws Exception {
+//		
+//		if (enableSwaggerSecurity) {
+//			http.authorizeRequests()
+////		.antMatchers("/swagger**").authenticated()
+////		.antMatchers("/v2/api-docs").authenticated()
+//			.antMatchers("/v2/api-docs").hasAnyRole("d0", "t0", "p0")
+//			.antMatchers("/swagger-resources").hasAnyRole("t0", "p0")
+//			.antMatchers("/swagger-ui.html").hasAnyRole("p0")
+//			.and().formLogin().and().anonymous();
+//		} else {
+//			http.authorizeRequests().anyRequest().anonymous();
+//		}
+//
+//		http.csrf().disable();
+//	}
+//}
+
+/**
+ * Way 2
+ * 
+ * @author hai.huang.a@outlook.com
+ *
+ */
+//@Configuration
+//@EnableWebSecurity
+//public class WebSecurityConfig {
+//
+//	@Configuration
+//	@Order(1)
+//	public static class SwaggerWebSecurityConfigurationAdapter extends WebSecurityConfigurerAdapter {
+//		@Override
+//		protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+//			auth.inMemoryAuthentication().passwordEncoder(new BCryptPasswordEncoder()).withUser("user1")
+//					.password(new BCryptPasswordEncoder().encode("123456")).roles("USER");
+//		}
+//
+//		@Override
+//		protected void configure(HttpSecurity http) throws Exception {
+//			http.authorizeRequests().antMatchers("/swagger**").authenticated().antMatchers("/v2/api-docs")
+//					.authenticated().and().formLogin();
+//			http.csrf().disable();
+//		}
+//	}
+//
+//	@Configuration
+//	public static class NormalWebSecurityConfigurerAdapter extends WebSecurityConfigurerAdapter {
+//		@Override
+//		protected void configure(HttpSecurity http) throws Exception {
+//			http.authorizeRequests().anyRequest().anonymous();
+//			http.csrf().disable();
+//		}
+//	}
+//}
+
+/**
+ * Final solution
+ * 
+ * @author hai.huang.a@outlook.com
+ *
  */
 @Configuration
 @EnableWebSecurity
