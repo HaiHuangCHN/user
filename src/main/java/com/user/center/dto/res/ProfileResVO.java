@@ -9,8 +9,8 @@ import io.swagger.annotations.ApiModel;
 import lombok.Data;
 
 @Data
-@ApiModel(value = "User Profile Response Body", description = "Information returned when sucessfully created")
-public class ProfileResp {
+@ApiModel(value = "User Profile Response Body", description = "Information returned when successfully created")
+public class ProfileResVO {
 
     @JsonInclude(Include.NON_NULL)
     private String errorMsg;
@@ -19,8 +19,8 @@ public class ProfileResp {
     private String sign;
 
     @JsonInclude(Include.NON_NULL)
-    private ProfileInfo profileInfo;
+    private ProfileInfoResVO profile;
 
-    private List<AddressResp> addressResp;
+    private List<AddressResVO> addresses;
 
 }

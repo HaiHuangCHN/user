@@ -9,7 +9,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class ProfileInfo {
+public class ProfileInfoResVO {
 
     @ApiModelProperty(value = "Email of the user", example = "your.emial.address@mail.com", required = true)
     @JsonInclude(Include.NON_NULL)
@@ -23,7 +23,7 @@ public class ProfileInfo {
 
     @Override
     public String toString() {
-        return "ProfileInfo{" +
+        return "ProfileInfoResVO{" +
                 "email='" + email + '\'' +
                 ", sex='" + sex + '\'' +
                 ", phoneNum='" + phoneNum + '\'' +

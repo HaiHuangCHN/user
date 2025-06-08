@@ -3,7 +3,7 @@ package com.user.center.controller;
 import com.user.center.costant.Constants;
 import com.user.center.dto.req.CreateUserDetailReqVO;
 import com.user.center.dto.req.LoginReq;
-import com.user.center.dto.res.ProfileResp;
+import com.user.center.dto.res.ProfileResVO;
 import com.user.center.exception.BusinessException;
 import com.user.center.service.IUserService;
 import com.user.center.util.JacksonUtils;
@@ -25,6 +25,7 @@ import javax.validation.Valid;
 @Slf4j
 @RequiredArgsConstructor
 public class UserController {
+
 
     private final IUserService userService;
 
@@ -65,43 +66,37 @@ public class UserController {
     @ApiResponses(value = {@ApiResponse(code = HttpStatus.SC_OK, message = Constants.SUCCESS, response = Boolean.class),
             @ApiResponse(code = HttpStatus.SC_INTERNAL_SERVER_ERROR, message = Constants.ERROR_RESPONSE, response =
                     BusinessException.class)})
-    @RequestMapping(value = "/login", method = RequestMethod.POST)
+    @PostMapping(value = "/login")
     public @ResponseBody
     Boolean login(@RequestBody LoginReq loginReq) {
         return userService.login(loginReq);
     }
 
     @ApiOperation(value = "Get a user", notes = "To find a user by username")
-    @ApiResponses(value = {@ApiResponse(code = HttpStatus.SC_OK, message = Constants.SUCCESS, response =
-            ProfileResp.class),
-            @ApiResponse(code = HttpStatus.SC_INTERNAL_SERVER_ERROR, message = Constants.ERROR_RESPONSE, response =
-                    BusinessException.class)})
+    @ApiResponses(value = {@ApiResponse(code = HttpStatus.SC_OK, message = Constants.SUCCESS, response = ProfileResVO.class),
+            @ApiResponse(code = HttpStatus.SC_INTERNAL_SERVER_ERROR, message = Constants.ERROR_RESPONSE, response = BusinessException.class)})
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "username", value = "Username of the account", example = "hai.huang.a@outlook.com",
-                    paramType = "path", defaultValue = "default username", required = true),
-            @ApiImplicitParam(name = "id", value = "ID of the user", example = "1", dataType = "int", defaultValue =
-                    "1", required = false)})
-    @GetMapping(value = "/{username}/{id}")
-    @Transactional(rollbackFor = Exception.class)// TODO remove it!
-    public ResponseEntity<ProfileResp> displayProfile(@PathVariable("username") String username,
-                                                      @PathVariable("id") Integer id) {
-        ProfileResp profileResp = userService.displayProfile(username);
+            @ApiImplicitParam(name = "username", value = "Username of the account", example = "hai.huang.a@outlook.com", paramType = "path", defaultValue = "default username", required = true),
+            @ApiImplicitParam(name = "id", value = "ID of the user", example = "1", dataType = "int", defaultValue = "1", required = false)})
+    @GetMapping(value = "/{username}")
+    public ResponseEntity<ProfileResVO> displayProfile(@PathVariable("username") String username) {
+        ProfileResVO profileResVO = userService.displayProfile(username);
 //		// Test
-//		profileResp.setSign("1234567897946565461321321");
+//		profileResVO.setSign("1234567897946565461321321");
 //		// Test
-//		profileResp.setEmail("Attacked");
-        log.info(JacksonUtils.objectToJsonCamel(profileResp));
+//		profileResVO.setEmail("Attacked");
+        log.info(JacksonUtils.objectToJsonCamel(profileResVO));
         // Way 1:
-//		HttpHeaders headers = new HttpHeaders(); 
+//		HttpHeaders headers = new HttpHeaders();
 //		headers.add("Cache-Control", "no-cache");
-//		return ResponseEntity.status(HttpStatus.SC_OK).headers(headers).body(profileResp);
+//		return ResponseEntity.status(HttpStatus.SC_OK).headers(headers).body(profileResVO);
         // Way 2
 //		return ResponseEntity.status(HttpStatus.SC_OK).cacheControl(CacheControl.maxAge(60, TimeUnit.SECONDS)).body
-//		(profileResp);
-        return ResponseEntity.status(HttpStatus.SC_OK)/* .cacheControl(CacheControl.noCache()) */.body(profileResp);
+//		(profileResVO);
+        return ResponseEntity.status(HttpStatus.SC_OK)/* .cacheControl(CacheControl.noCache()) */.body(profileResVO);
     }
 
-    @RequestMapping(value = "/delete", method = RequestMethod.DELETE)
+    @DeleteMapping(value = "/delete")
     @Transactional(rollbackFor = Exception.class)
     public ResponseEntity<?> deleteProfile(@Valid @RequestBody LoginReq loginReq) throws Exception {
         Boolean result = userService.deleteProfile(loginReq);

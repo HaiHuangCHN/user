@@ -27,7 +27,7 @@ public class CreateUserDetailReqVO {
 
     @Valid
     @NotNull
-    private CreateProfileReqVO createProfileReq;
+    private CreateProfileReqVO profile;
 
     /**
      * Test field, not persist into database

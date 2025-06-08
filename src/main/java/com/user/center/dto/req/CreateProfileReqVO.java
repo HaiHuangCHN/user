@@ -32,7 +32,7 @@ public class CreateProfileReqVO {
 
     @Valid
     @NotEmpty
-    private List<CreateAddressReqVO> createAddressReq;
+    private List<CreateAddressReqVO> addresses;
 
 
 }

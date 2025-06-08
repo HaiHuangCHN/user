@@ -4,8 +4,8 @@ import io.swagger.annotations.ApiModel;
 import lombok.Data;
 
 @Data
-@ApiModel(value = "AddressResp object model", description = "Address Information")
-public class AddressResp {
+@ApiModel(value = "AddressResVO object model", description = "Address Information")
+public class AddressResVO {
 
 
     private String country;

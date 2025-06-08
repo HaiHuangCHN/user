@@ -6,7 +6,7 @@ import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.Claim;
 import com.auth0.jwt.interfaces.DecodedJWT;
-import com.user.center.dto.res.ProfileInfo;
+import com.user.center.dto.res.ProfileInfoResVO;
 import com.user.center.costant.ErrorCodeEnum;
 import com.user.center.exception.TokenException;
 import org.springframework.util.Assert;
@@ -31,12 +31,12 @@ public class JwtUtils {
     /**
      * Generate token
      *
-     * @param profileInfo
+     * @param profileInfoResVO
      * @return
      */
-    public static String generateToken(ProfileInfo profileInfo) {
-        Assert.notNull(profileInfo, "The object must be not null");
-        Map<String, Object> convertedMap = OtherUtils.convertObjToMap(profileInfo);
+    public static String generateToken(ProfileInfoResVO profileInfoResVO) {
+        Assert.notNull(profileInfoResVO, "The object must be not null");
+        Map<String, Object> convertedMap = OtherUtils.convertObjToMap(profileInfoResVO);
         System.out.println(convertedMap);
 
         // header map
