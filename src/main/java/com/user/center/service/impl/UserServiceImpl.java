@@ -6,18 +6,19 @@ import com.user.center.dao.entity.Profile;
 import com.user.center.dao.entity.SexEnum;
 import com.user.center.dao.entity.UserDetail;
 import com.user.center.dao.repository.*;
-import com.user.center.dto.request.AddressReq;
-import com.user.center.dto.response.AddressResp;
-import com.user.center.dto.response.ProfileInfo;
-import com.user.center.dto.response.ProfileResp;
-import com.user.center.dto.response.TestResp;
+import com.user.center.dto.req.CreateAddressReqVO;
+import com.user.center.dto.req.CreateUserDetailReqVO;
+import com.user.center.dto.res.AddressResp;
+import com.user.center.dto.res.ProfileInfo;
+import com.user.center.dto.res.ProfileResp;
+import com.user.center.dto.res.TestResp;
 import com.user.center.exception.BusinessException;
 import com.user.center.exception.InputParameterException;
 import com.user.center.util.JwtUtils;
-import com.user.center.dto.request.AddUserDetailReq;
-import com.user.center.dto.request.LoginReq;
+import com.user.center.dto.req.LoginReq;
 import com.user.center.service.IUserService;
 import com.user.center.util.MD5Util;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,6 +40,7 @@ import java.util.List;
  * @author hai.huang.a@outlook.com
  * @date 2021-08-01 15:25:35
  */
+@Slf4j
 @Service
 public class UserServiceImpl implements IUserService {
 
@@ -63,59 +65,60 @@ public class UserServiceImpl implements IUserService {
     private EntityManager entityManager;
 
     @Override
-    public void validateInboundRequest(Errors errors) throws InputParameterException {
+    public void validateInboundRequest(Errors errors) {
         if (errors.hasErrors()) {
-            String errorsMsg =
-                    errors.getAllErrors().stream().map(x -> x.getDefaultMessage()).reduce((join, x) -> join + ", " + x).get();
-            logger.error("errorCode: " + ErrorCodeEnum.INCOMPLETE_REQUEST_BODY.getSelfDefinedCode());
-            throw new InputParameterException(ErrorCodeEnum.INCOMPLETE_REQUEST_BODY.getSelfDefinedCode(),
+            String errorsMsg = errors.getAllErrors().stream()
+                    .map(x -> x.getDefaultMessage())
+                    .reduce((join, x) -> join + ", " + x).get();
+            log.error("errorCode: {}", ErrorCodeEnum.INCOMPLETE_REQUEST_BODY.getSelfDefinedCode());
+            throw new BusinessException(ErrorCodeEnum.INCOMPLETE_REQUEST_BODY.getSelfDefinedCode(),
                     ErrorCodeEnum.INCOMPLETE_REQUEST_BODY.getMessage(), errorsMsg);
         }
     }
 
     @Override
-    @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.REPEATABLE_READ, rollbackFor =
-            Exception.class)
-    public boolean add(AddUserDetailReq addUserDetailReq) throws BusinessException {
-//        // Test retry
-//        logger.info("Calling...");
+    @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.REPEATABLE_READ, rollbackFor = Exception.class)
+    public boolean createUser(CreateUserDetailReqVO createUserDetailReqVO) throws BusinessException {
+//        // Test transaction
+//        log.info("Calling...");
 //        throw new BusinessException("001", "Test Retry", "Test Retry");
         LocalDateTime currentDatetime = LocalDateTime.now();
-        String encodePassword = MD5Util.uppercaseMD5(addUserDetailReq.getPassword());
-        UserDetail userDetail = new UserDetail(addUserDetailReq.getUsername(), encodePassword);
-        userDetail.setCreatedAt(currentDatetime);
+        String encodePassword = MD5Util.uppercaseMD5(createUserDetailReqVO.getPassword());
+        UserDetail userDetail = new UserDetail(createUserDetailReqVO.getUsername(), encodePassword);
         userDetail.setYn(true);
         userDetail.setCreatedBy("system");
-        userDetail.setUpdatedAt(currentDatetime);
+        userDetail.setCreatedAt(currentDatetime);
         userDetail.setUpdatedBy("system");
+        userDetail.setUpdatedAt(currentDatetime);
         userRepository.save(userDetail);
         Profile profile = new Profile();
-        profile.setUser(userDetail);
-        profile.setSex(SexEnum.valueOf(addUserDetailReq.getNewProfileReq().getSex()));
-        profile.setEmail(addUserDetailReq.getNewProfileReq().getEmail());
-        profile.setPhoneNum(addUserDetailReq.getNewProfileReq().getPhoneNum());
+        profile.setUserDetail(userDetail);
+        profile.setSex(SexEnum.valueOf(createUserDetailReqVO.getCreateProfileReq().getSex()));
+        profile.setEmail(createUserDetailReqVO.getCreateProfileReq().getEmail());
+        profile.setPhoneNum(createUserDetailReqVO.getCreateProfileReq().getPhoneNum());
         profile.setYn(true);
-        profile.setCreatedAt(currentDatetime);
         profile.setCreatedBy("system");
-        profile.setUpdatedAt(currentDatetime);
+        profile.setCreatedAt(currentDatetime);
         profile.setUpdatedBy("system");
-        profileRepository.save(profile);// Save user object is enough, if Cascade is enable
-        if (addUserDetailReq.getNewProfileReq().getAddressReqList() != null) {
-            for (AddressReq address : addUserDetailReq.getNewProfileReq().getAddressReqList()) {
-                Address addressDb = new Address();
-                addressDb.setProfile(profile);
-                addressDb.setCountry(address.getCountry());
-                addressDb.setProvience(address.getProvince());
-                addressDb.setCity(address.getCity());
-                addressDb.setDistrict(address.getDistrict());
-                addressDb.setDetailAddress(address.getDetailAddress());
-                addressDb.setPostcode(address.getPostcode());
-                addressDb.setYn(true);
-                addressDb.setCreatedAt(currentDatetime);
-                addressDb.setCreatedBy("system");
-                addressDb.setUpdatedAt(currentDatetime);
-                addressDb.setUpdatedBy("system");
-                addressRepository.save(addressDb);// Save user object is enough, if Cascade is enable
+        profile.setUpdatedAt(currentDatetime);
+        // Save user object is enough, if Cascade is enable
+        profileRepository.save(profile);
+        if (createUserDetailReqVO.getCreateProfileReq().getCreateAddressReq() != null) {
+            for (CreateAddressReqVO createAddressReq : createUserDetailReqVO.getCreateProfileReq().getCreateAddressReq()) {
+                Address address = new Address();
+                address.setProfile(profile);
+                address.setCountry(createAddressReq.getCountry());
+                address.setProvience(createAddressReq.getProvince());
+                address.setCity(createAddressReq.getCity());
+                address.setDistrict(createAddressReq.getDistrict());
+                address.setDetailAddress(createAddressReq.getDetailAddress());
+                address.setPostcode(createAddressReq.getPostcode());
+                address.setYn(true);
+                address.setCreatedBy("system");
+                address.setCreatedAt(currentDatetime);
+                address.setUpdatedBy("system");
+                address.setUpdatedAt(currentDatetime);
+                addressRepository.save(address);// Save user object is enough, if Cascade is enable
             }
         }
         return true;
@@ -137,7 +140,7 @@ public class UserServiceImpl implements IUserService {
     public ProfileResp displayProfile(String username) {
         ProfileResp profileResp = new ProfileResp();
 
-        UserDetail userDetail = userDataProvider.findByUsername();
+        UserDetail userDetail = userDataProvider.findByUsername(username);
         Profile profileDb = userDetail.getProfile();
         Collection<Address> addressList = profileDb.getAddressList();
 

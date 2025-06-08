@@ -1,4 +1,4 @@
-package com.user.center.dto.response;
+package com.user.center.dto.res;
 
 import io.swagger.annotations.ApiModel;
 import lombok.Data;

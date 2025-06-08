@@ -1,4 +1,4 @@
-package com.user.center.dto.response;
+package com.user.center.dto.res;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;

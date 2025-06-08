@@ -11,17 +11,17 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface UserRepository extends JpaRepository<UserDetail, Integer> {
+public interface UserRepository extends JpaRepository<UserDetail, Long> {
 
 
-    @Query(value = "select * from user_center.user where username=:username and password=:password", nativeQuery = true)
+    @Query(value = "select * from user_center.user_detail where username=:username and password=:password", nativeQuery = true)
     UserDetail findByUsernameAndPassword(@Param("username") String username, @Param("password") String password);
 
     UserDetail findByUsername(String username);
 
     List<UserDetail> findByUpdatedAtBefore(LocalDateTime updatedAt);
 
-//    @Query(value = "select * from user_center.user where updatedAt<:updatedAt", nativeQuery = true)
+//    @Query(value = "select * from user_center.user_detail where updatedAt<:updatedAt", nativeQuery = true)
 //    public List<User> findByUpdatedAtBeforeNativeQuery(@Param("updatedAt") Timestamp updatedAt);
 
     List<UserDetail> deleteByUpdatedAtBefore(LocalDateTime updatedAt);

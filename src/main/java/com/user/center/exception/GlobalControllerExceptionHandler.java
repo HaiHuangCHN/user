@@ -1,6 +1,7 @@
 package com.user.center.exception;
 
 import com.user.center.costant.Constants;
+import com.user.center.dto.res.ErrorResBody;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,32 +18,21 @@ public class GlobalControllerExceptionHandler {
     @ResponseBody
     public ResponseEntity<Object> errorHandler(Exception e) throws Exception {
         log.error(e.getMessage(), e);
-        ErrorBody errorBody = new ErrorBody();
+        ErrorResBody errorResBody = new ErrorResBody();
         HttpStatus httpStatus = null;
         if (e instanceof BusinessException) {
             httpStatus = HttpStatus.BAD_REQUEST;
-            errorBody.setSource(Constants.SOURCE);
-            errorBody.setCode(((BusinessException) e).getCode());
-            errorBody.setMessage(((BusinessException) e).getMessage());
-            errorBody.setDetail(((BusinessException) e).getDetail());
-        } else if (e instanceof InputParameterException) {
-            httpStatus = HttpStatus.BAD_REQUEST;
-            errorBody.setSource(Constants.SOURCE);
-            errorBody.setCode(((InputParameterException) e).getCode());
-            errorBody.setMessage(((InputParameterException) e).getMessage());
-            errorBody.setDetail(((InputParameterException) e).getDetail());
-        } else if (e instanceof TokenException) {
-            httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
-            errorBody.setSource(Constants.SOURCE);
-            errorBody.setCode(((TokenException) e).getCode());
-            errorBody.setMessage(((TokenException) e).getMessage());
-            errorBody.setDetail(((TokenException) e).getDetail());
+            errorResBody.setSource(Constants.SOURCE);
+            errorResBody.setCode(((BusinessException) e).getCode());
+            errorResBody.setMessage(e.getMessage());
+            errorResBody.setDetail(((BusinessException) e).getDetail());
         } else {
             httpStatus = HttpStatus.BAD_REQUEST;
-            errorBody.setSource(Constants.SOURCE);
-            errorBody.setMessage(Constants.UNEXPECTED_ERROR + ": " + e.getMessage());
+            errorResBody.setSource(Constants.SOURCE);
+            errorResBody.setMessage(Constants.UNEXPECTED_ERROR + ": " + e.getMessage());
         }
-        return ResponseEntity.status(httpStatus).body(errorBody);
+
+        return ResponseEntity.status(httpStatus).body(errorResBody);
     }
 
 }

@@ -2,14 +2,16 @@ package com.user.center.dao.entity;
 
 import javax.persistence.Column;
 import javax.persistence.MappedSuperclass;
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
 /**
  * No Lombok annotation
  */
 @MappedSuperclass
-public class BaseEntity {
+public class BaseEntity implements Serializable {
 
+    private static final long serialVersionUID = 1L;
 
     /**
      * 0 - Deleted, 1 - Not Deleted

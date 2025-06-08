@@ -1,8 +1,14 @@
 package com.user.center.costant;
 
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+
 /**
  * DB Related Error
  */
+@Getter
+@RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public enum DbErrorEnum {
 
     INSERT_ERROR("1", "db.insert.error"),
@@ -12,10 +18,5 @@ public enum DbErrorEnum {
     private final String code;
 
     private final String message;
-
-    DbErrorEnum(String code, String message) {
-        this.code = code;
-        this.message = message;
-    }
 
 }

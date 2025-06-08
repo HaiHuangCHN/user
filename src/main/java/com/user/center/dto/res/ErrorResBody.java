@@ -1,9 +1,8 @@
-package com.user.center.exception;
+package com.user.center.dto.res;
 
-@Deprecated
-public class InputParameterException extends Exception {
+public class ErrorResBody {
 
-    private static final long serialVersionUID = 1L;
+    private String source;
 
     private String code;
 
@@ -11,12 +10,12 @@ public class InputParameterException extends Exception {
 
     private String detail;
 
-    protected InputParameterException() {}
+    public String getSource() {
+        return source;
+    }
 
-    public InputParameterException(String code, String message, String detail) {
-        this.code = code;
-        this.message = message;
-        this.detail = detail;
+    public void setSource(String source) {
+        this.source = source;
     }
 
     public String getCode() {
@@ -27,7 +26,6 @@ public class InputParameterException extends Exception {
         this.code = code;
     }
 
-    @Override
     public String getMessage() {
         return message;
     }
@@ -37,9 +35,6 @@ public class InputParameterException extends Exception {
     }
 
     public String getDetail() {
-        if (this.detail == null) {
-            this.detail = this.message;
-        }
         return detail;
     }
 

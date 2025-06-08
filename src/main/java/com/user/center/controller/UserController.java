@@ -1,20 +1,16 @@
 package com.user.center.controller;
 
 import com.user.center.costant.Constants;
-import com.user.center.dto.response.ProfileResp;
+import com.user.center.dto.req.CreateUserDetailReqVO;
+import com.user.center.dto.req.LoginReq;
+import com.user.center.dto.res.ProfileResp;
 import com.user.center.exception.BusinessException;
-import com.user.center.exception.InputParameterException;
 import com.user.center.service.IUserService;
-import com.user.center.dto.request.AddUserDetailReq;
-import com.user.center.dto.request.LoginReq;
+import com.user.center.util.JacksonUtils;
 import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.http.HttpStatus;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.Errors;
@@ -33,24 +29,22 @@ public class UserController {
     private final IUserService userService;
 
     /**
-     * Note:
-     * Won't do validation:
+     * 创建用户
      *
-     * @param addUserDetailReq
+     * @param createUserDetailReqVO
      * @param errors
      * @return
      * @throws BusinessException
-     * @throws InputParameterException
-     * @RequestBody final AddUserDetailReq addUserDetailReq
+     * @RequestBody final CreateUserDetailReqVO createUserDetailReqVO
      * <p>
      * Will do validation and throw MethodArgumentNotValidException
-     * @Validated @RequestBody final AddUserDetailReq addUserDetailReq
+     * @Validated @RequestBody final CreateUserDetailReqVO createUserDetailReqVO
      * <p>
      * Will do validation and but won't throw Exception:
-     * @Validated @RequestBody final AddUserDetailReq addUserDetailReq, Errors errors
+     * @Validated @RequestBody final CreateUserDetailReqVO createUserDetailReqVO, Errors errors
      * <p>
      * Will do validation and throw Exception:
-     * @Validated @RequestBody final AddUserDetailReq addUserDetailReq, Errors errors
+     * @Validated @RequestBody final CreateUserDetailReqVO createUserDetailReqVO, Errors errors
      * userService.validateInboundRequest(errors);
      */
     @ApiOperation(value = "Create a new user", notes = "Only when the user is new to the system does it succeed to " +
@@ -58,16 +52,14 @@ public class UserController {
     @ApiResponses(value = {@ApiResponse(code = HttpStatus.SC_OK, message = Constants.SUCCESS, response = Boolean.class),
             @ApiResponse(code = HttpStatus.SC_INTERNAL_SERVER_ERROR, message = Constants.ERROR_RESPONSE, response =
                     BusinessException.class)})
-    @PostMapping(value = "/add", consumes = {"application/json"}, produces = {"application/json"})
-    public @ResponseBody
-    boolean addUser(@Validated @RequestBody final AddUserDetailReq addUserDetailReq, Errors errors) throws BusinessException, InputParameterException {
+    @PostMapping(value = "/create", consumes = {"application/json"}, produces = {"application/json"})
+    public @ResponseBody boolean createUser(@Validated @RequestBody final CreateUserDetailReqVO createUserDetailReqVO, Errors errors) throws BusinessException {
         userService.validateInboundRequest(errors);
-        Boolean result = userService.add(addUserDetailReq);
-//		if (true) {
-//			rabbmitMqSenderService.send();
-//		}
-//        return result;
-        return true;
+        Boolean result = userService.createUser(createUserDetailReqVO);
+		if (true) {
+            // 发 MQ 通知下游系统，实现诸如：短信发送 / 积分发放 / 优惠券发放等
+		}
+        return result;
     }
 
     @ApiResponses(value = {@ApiResponse(code = HttpStatus.SC_OK, message = Constants.SUCCESS, response = Boolean.class),
@@ -98,7 +90,7 @@ public class UserController {
 //		profileResp.setSign("1234567897946565461321321");
 //		// Test
 //		profileResp.setEmail("Attacked");
-        log.info(profileResp);
+        log.info(JacksonUtils.objectToJsonCamel(profileResp));
         // Way 1:
 //		HttpHeaders headers = new HttpHeaders(); 
 //		headers.add("Cache-Control", "no-cache");

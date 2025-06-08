@@ -1,4 +1,4 @@
-package com.user.center.dto.response;
+package com.user.center.dto.res;
 
 import java.util.List;
 

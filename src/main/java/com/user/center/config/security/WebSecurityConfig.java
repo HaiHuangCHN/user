@@ -19,9 +19,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 //		// Disable CSRF protection, please implement the token approach according to
 //		// Spring Security spec before enable, and we can enable by URL pattern
 //		http.csrf().disable();
-//		// No cache HTTP header is enabled by default, we can implement the request
-//		// matcher here to disable for particular URL or override the header in
-//		// controller function
 //	}
 //}
 
@@ -46,19 +43,12 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 //		.and().withUser("swagger_p0").password(new BCryptPasswordEncoder().encode("p0123456")).roles("p0");
 //	}
 //
-////	@Override
-////	protected void configure(HttpSecurity http) throws Exception {
-////		http.authorizeRequests().antMatchers("/profile/**").anonymous().anyRequest().authenticated().and().formLogin();
-////		http.csrf().disable();
-////	}
 //
 //	@Override
 //	protected void configure(HttpSecurity http) throws Exception {
 //		
 //		if (enableSwaggerSecurity) {
 //			http.authorizeRequests()
-////		.antMatchers("/swagger**").authenticated()
-////		.antMatchers("/v2/api-docs").authenticated()
 //			.antMatchers("/v2/api-docs").hasAnyRole("d0", "t0", "p0")
 //			.antMatchers("/swagger-resources").hasAnyRole("t0", "p0")
 //			.antMatchers("/swagger-ui.html").hasAnyRole("p0")
@@ -86,7 +76,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 //	public static class SwaggerWebSecurityConfigurationAdapter extends WebSecurityConfigurerAdapter {
 //		@Override
 //		protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-//			auth.inMemoryAuthentication().passwordEncoder(new BCryptPasswordEncoder()).withUser("user1")
+//			auth.inMemoryAuthentication().passwordEncoder(new BCryptPasswordEncoder()).withUser("user")
 //					.password(new BCryptPasswordEncoder().encode("123456")).roles("USER");
 //		}
 //
@@ -135,8 +125,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        if (enableSwaggerSecurity) {
-            http.authorizeRequests().antMatchers("/swagger**").authenticated().antMatchers("/v2/api-docs").authenticated().and().formLogin().loginPage("/common/login/page").and()
+        if (Boolean.TRUE.equals(enableSwaggerSecurity)) {
+            http.authorizeRequests()
+                    .antMatchers("/swagger**").authenticated()
+                    .antMatchers("/v2/api-docs").authenticated()
+                    .and().formLogin().loginPage("/login/page").and()
                     .anonymous()/* .and().httpBasic() */;
         } else {
             http.authorizeRequests().anyRequest().anonymous();

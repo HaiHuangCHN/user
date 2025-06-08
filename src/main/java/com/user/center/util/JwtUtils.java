@@ -6,7 +6,7 @@ import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.Claim;
 import com.auth0.jwt.interfaces.DecodedJWT;
-import com.user.center.dto.response.ProfileInfo;
+import com.user.center.dto.res.ProfileInfo;
 import com.user.center.costant.ErrorCodeEnum;
 import com.user.center.exception.TokenException;
 import org.springframework.util.Assert;

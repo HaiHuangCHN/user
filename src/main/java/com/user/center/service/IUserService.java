@@ -1,19 +1,16 @@
 package com.user.center.service;
 
-import com.user.center.dto.response.ProfileResp;
+import com.user.center.dto.req.CreateUserDetailReqVO;
+import com.user.center.dto.req.LoginReq;
+import com.user.center.dto.res.ProfileResp;
 import com.user.center.exception.BusinessException;
-import com.user.center.exception.InputParameterException;
-import com.user.center.dto.request.AddUserDetailReq;
-import com.user.center.dto.request.LoginReq;
-import org.springframework.retry.annotation.Retryable;
 import org.springframework.validation.Errors;
 
 public interface IUserService {
 
-    void validateInboundRequest(Errors errors) throws InputParameterException;
+    void validateInboundRequest(Errors errors);
 
-    @Retryable(value = RuntimeException.class)
-    boolean add(AddUserDetailReq addUserDetailReq) throws BusinessException;
+    boolean createUser(CreateUserDetailReqVO createUserDetailReqVO) throws BusinessException;
 
     Boolean login(LoginReq loginReq);
 

@@ -1,4 +1,4 @@
-package com.user.center.dto.request;
+package com.user.center.dto.req;
 
 import lombok.Data;
 
