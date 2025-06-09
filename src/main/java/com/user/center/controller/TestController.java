@@ -27,7 +27,6 @@ public class TestController {
 
     @GetMapping(value = "getDefaultEchoMsg")
     public String getDefaultEchoMsg() {
-        // 如果 url 配置错，报错：502 Bad Gateway: [no body]
         return restTemplate.getForObject(serverURL + "/test/getDefaultEchoMsg", String.class);
     }
 
