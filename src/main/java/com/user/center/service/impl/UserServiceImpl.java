@@ -8,7 +8,7 @@ import com.user.center.dao.entity.UserDetail;
 import com.user.center.dao.repository.AddressRepository;
 import com.user.center.dao.repository.ProfileRepository;
 import com.user.center.dao.repository.UserDataProvider;
-import com.user.center.dao.repository.UserRepository;
+import com.user.center.dao.repository.UserDetailRepository;
 import com.user.center.dto.req.CreateAddressReqVO;
 import com.user.center.dto.req.CreateUserDetailReqVO;
 import com.user.center.dto.req.LoginReq;
@@ -21,8 +21,6 @@ import com.user.center.service.IUserService;
 import com.user.center.util.JwtUtils;
 import com.user.center.util.MD5Util;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
@@ -45,10 +43,8 @@ import java.util.List;
 @Service
 public class UserServiceImpl implements IUserService {
 
-    private static final Logger logger = LoggerFactory.getLogger(IUserService.class);
-
     @Autowired
-    private UserRepository userRepository;
+    private UserDetailRepository userDetailRepository;
 
     @Autowired
     private ProfileRepository profileRepository;
@@ -88,7 +84,7 @@ public class UserServiceImpl implements IUserService {
         userDetail.setCreatedAt(currentDatetime);
         userDetail.setUpdatedBy("system");
         userDetail.setUpdatedAt(currentDatetime);
-        userRepository.save(userDetail);
+        userDetailRepository.save(userDetail);
         Profile profileDb = new Profile();
         profileDb.setUserDetail(userDetail);
         profileDb.setSex(SexEnum.valueOf(createUserDetailReqVO.getProfile().getSex()));
@@ -131,7 +127,7 @@ public class UserServiceImpl implements IUserService {
     @Transactional(rollbackFor = Exception.class)
     public Boolean login(LoginReq loginReq) {
         String encodePassword = MD5Util.uppercaseMD5(loginReq.getPassword());
-        UserDetail userDetail = userRepository.findByUsernameAndPassword(loginReq.getUsername(), encodePassword);
+        UserDetail userDetail = userDetailRepository.findByUsernameAndPassword(loginReq.getUsername(), encodePassword);
         boolean isSuccessful = false;
         if (userDetail != null) {
             isSuccessful = true;
@@ -182,9 +178,9 @@ public class UserServiceImpl implements IUserService {
     @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.READ_COMMITTED, rollbackFor = Exception.class)
     public boolean deleteProfile(LoginReq loginReq) throws BusinessException {
         String encodePassword = MD5Util.uppercaseMD5(loginReq.getPassword());
-        UserDetail userDetail = userRepository.findByUsernameAndPassword(loginReq.getUsername(), encodePassword);
+        UserDetail userDetail = userDetailRepository.findByUsernameAndPassword(loginReq.getUsername(), encodePassword);
         if (userDetail != null) {
-            userRepository.delete(userDetail);
+            userDetailRepository.delete(userDetail);
             return true;
         } else {
             throw new BusinessException(

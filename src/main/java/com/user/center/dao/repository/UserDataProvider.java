@@ -17,7 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class UserDataProvider {
 
     @Autowired
-    private UserRepository userRepository;
+    private UserDetailRepository userDetailRepository;
 
     @Autowired
     private ProfileRepository profileRepository;
@@ -32,7 +32,7 @@ public class UserDataProvider {
     @Cacheable(value = "users", key = "#username")
     public UserDetail findByUsername(String username) {
         log.info("Enter findByUserName method");
-        UserDetail userDetail = userRepository.findByUsername(username);
+        UserDetail userDetail = userDetailRepository.findByUsername(username);
         return userDetail;
     }
 
@@ -40,7 +40,7 @@ public class UserDataProvider {
     @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.REPEATABLE_READ, rollbackFor = Exception.class)
     public UserDetail saveOrUpdate(UserDetail userDetail) {
         log.info("Enter saveOrUpdate method");
-        UserDetail userDetailSaved = userRepository.save(userDetail);
+        UserDetail userDetailSaved = userDetailRepository.save(userDetail);
         profileRepository.save(userDetail.getProfile());
         addressRepository.saveAll(userDetail.getProfile().getAddressList());
         return userDetailSaved;// TODO What userDetailSaved looks like? How about the id?
@@ -55,7 +55,7 @@ public class UserDataProvider {
 //        if (6 / 3 == 2) {
 //            throw new Exception();
 //        }
-        userRepository.delete(userDetail);
+        userDetailRepository.delete(userDetail);
     }
 
     // Method to simulate a slow response

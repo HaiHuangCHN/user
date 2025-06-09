@@ -11,7 +11,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface UserRepository extends JpaRepository<UserDetail, Long> {
+public interface UserDetailRepository extends JpaRepository<UserDetail, Long> {
 
 
     @Query(value = "select * from user_center.user_detail where username=:username and password=:password", nativeQuery = true)
