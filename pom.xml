@@ -18,6 +18,10 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<spring-cloud-alibaba-version>2021.1</spring-cloud-alibaba-version>
 		<spring-cloud.version>2020.0.1</spring-cloud.version>
+		<!-- 问题：java.lang.ClassNotFoundException: io.netty.resolver.dns.macos.MacOSDnsServerAddressStreamProvider -->
+		<!-- 原因：该类是 Netty 为 macOS 系统提供的 DNS 解析器实现。Spring Cloud Alibaba / Nacos 引入的 Netty 版本较低 -->
+		<!-- 解决：升级 Netty 版本，从 4.1.58.Final -> 4.1.90.Final -->
+		<netty.version>4.1.90.Final</netty.version>
 	</properties>
 
 	<dependencyManagement>
@@ -49,8 +53,16 @@
 			<groupId>com.alibaba.cloud</groupId>
 			<artifactId>spring-cloud-starter-alibaba-nacos-config</artifactId>
 		</dependency>
-		<!--        Spring Cloud-->
-		<!--		Web-->
+		<!-- Spring Cloud-->
+
+		<!-- Spring Boot 2.4+ 版本中，默认不再自动包含引导上下文，需手动引入 spring-cloud-starter-bootstrap 依赖 -->
+		<!-- 才能解决 Nacos 读取的问题 -->
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-bootstrap</artifactId>
+		</dependency>
+
+		<!-- Web-->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
@@ -59,14 +71,14 @@
 			<groupId>org.apache.httpcomponents</groupId>
 			<artifactId>httpclient</artifactId>
 		</dependency>
-		<!--		Web-->
+		<!-- Web-->
 
-		<!--		Spring Security-->
+		<!-- Spring Security-->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-security</artifactId>
 		</dependency>
-		<!--		Spring Security-->
+		<!-- Spring Security-->
 
 		<dependency>
 			<groupId>com.auth0</groupId>
@@ -79,12 +91,20 @@
 			<artifactId>spring-retry</artifactId>
 		</dependency>
 
+		<!-- Bean Validation related -->
+		<dependency>
+			<groupId>javax.validation</groupId>
+			<artifactId>validation-api</artifactId>
+			<version>2.0.1.Final</version>
+		</dependency>
+		<!-- Bean Validation related -->
+
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-jpa</artifactId>
 		</dependency>
 
-<!--		MySQL-->
+        <!-- MySQL-->
 		<dependency>
 			<groupId>mysql</groupId>
 			<artifactId>mysql-connector-java</artifactId>
@@ -94,14 +114,14 @@
 			<artifactId>datasource-proxy</artifactId>
 			<version>1.4.9</version>
 		</dependency>
-		<!--		MySQL-->
+		<!-- MySQL-->
 
-		<!--		Redis-->
+		<!-- Redis-->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-redis</artifactId>
 		</dependency>
-		<!--		Redis-->
+		<!-- Redis-->
 
 		<dependency>
 			<groupId>io.springfox</groupId>

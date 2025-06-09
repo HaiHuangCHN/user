@@ -4,3 +4,6 @@ server:
 spring:
   application:
     name: user-center
+  cloud:
+    bootstrap:
+      enabled: true
