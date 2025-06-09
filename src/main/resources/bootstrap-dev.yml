@@ -6,7 +6,7 @@ spring:
         username: ${NACOS_SERVER_USERNAME:}
         password: ${NACOS_SERVER_PASSWORD:}
         namespace: 49631895-05c8-4267-a92e-dbce7abe43e5
-        group: USER_GROUP
+        group: NICE_GROUP
 
       config:
         serverAddr: ${NACOS_SERVER_ADDR:} # Nacos 作为配置中心地址
@@ -14,7 +14,7 @@ spring:
         password: ${NACOS_SERVER_PASSWORD:}
         file-extension: properties # 指定为 properties 格式的配置
         namespace: 49631895-05c8-4267-a92e-dbce7abe43e5
-        group: USER_GROUP
+        group: NICE_GROUP
 
 management:
   endpoints:
