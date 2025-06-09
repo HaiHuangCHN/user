@@ -8,7 +8,7 @@ import com.auth0.jwt.interfaces.Claim;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.user.center.dto.res.ProfileInfoResVO;
 import com.user.center.costant.ErrorCodeEnum;
-import com.user.center.exception.TokenException;
+import com.user.center.exception.BusinessException;
 import org.springframework.util.Assert;
 
 import java.util.HashMap;
@@ -69,20 +69,19 @@ public class JwtUtils {
      * @param token
      * @param obj
      * @return
-     * @throws TokenException
+     * @throws BusinessException
      */
-    public static boolean verifyToken(String token, Object obj) throws TokenException {
+    public static boolean verifyToken(String token, Object obj) throws BusinessException {
         DecodedJWT decodedJwt = null;
         try {
             JWTVerifier verifier = JWT.require(Algorithm.HMAC256(SECRET)).build();
             decodedJwt = verifier.verify(token);
         } catch (Exception e) {
             // Fail to verify token, throw exception
-            throw new TokenException(ErrorCodeEnum.FAIL_VERIFY_TOKEN.getSelfDefinedCode(),
+            throw new BusinessException(ErrorCodeEnum.FAIL_VERIFY_TOKEN.getSelfDefinedCode(),
                     ErrorCodeEnum.FAIL_VERIFY_TOKEN.getMessage(), ErrorCodeEnum.FAIL_VERIFY_TOKEN.getDetail());
         }
-        boolean isMatch = checkFields(decodedJwt.getClaims(), obj);
-        return isMatch;
+        return checkFields(decodedJwt.getClaims(), obj);
     }
 
     private static boolean checkFields(Map<String, Claim> claims, Object obj) {
