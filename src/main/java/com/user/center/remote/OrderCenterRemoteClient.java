@@ -11,6 +11,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 public interface OrderCenterRemoteClient {
 
     @GetMapping(value = "/test/getDefaultEchoMsg")
-    String getServerPort();
+    String getDefaultEchoMsg();
 
 }

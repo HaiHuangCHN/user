@@ -10,11 +10,11 @@ public class OrderCenterRemoteClientFallbackFactory implements FallbackFactory<O
 
     @Override
     public OrderCenterRemoteClient create(Throwable cause) {
-        log.error("OrderCenterRemoteClient.getServerPort 异常", cause);
+        log.error("OrderCenterRemoteClient.getDefaultEchoMsg 异常", cause);
         return new OrderCenterRemoteClient() {
             @Override
-            public String getServerPort() {
-                return "default port";
+            public String getDefaultEchoMsg() {
+                return "fallback";
             }
         };
     }
