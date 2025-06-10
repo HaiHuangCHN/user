@@ -14,7 +14,7 @@ public class OrderCenterRemoteClientFallbackFactory implements FallbackFactory<O
         return new OrderCenterRemoteClient() {
             @Override
             public String getDefaultEchoMsg() {
-                return "fallback";
+                return "{\"field\": \"fallback\"}";
             }
         };
     }
