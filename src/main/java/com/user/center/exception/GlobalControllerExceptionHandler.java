@@ -19,7 +19,7 @@ public class GlobalControllerExceptionHandler {
     public ResponseEntity<Object> errorHandler(Exception e) {
         log.error(e.getMessage(), e);
         ErrorResBody errorResBody = new ErrorResBody();
-        HttpStatus httpStatus = null;
+        HttpStatus httpStatus;
         if (e instanceof BusinessException) {
             httpStatus = HttpStatus.BAD_REQUEST;
             errorResBody.setCode(((BusinessException) e).getCode());
