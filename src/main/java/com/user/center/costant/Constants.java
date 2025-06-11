@@ -2,7 +2,6 @@ package com.user.center.costant;
 
 public class Constants {
 
-    public static final String SOURCE = "User Center APP";
     public static final String UNEXPECTED_ERROR = "Unexpected error";
     public static final String SUCCESS = "Success";
     public static final String HEADER_NAME = "Header name";

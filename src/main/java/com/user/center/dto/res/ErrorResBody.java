@@ -7,8 +7,6 @@ import lombok.Setter;
 @Getter
 public class ErrorResBody {
 
-    private String source;
-
     private String code;
 
     private String message;

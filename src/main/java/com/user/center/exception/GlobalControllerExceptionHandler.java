@@ -16,19 +16,17 @@ public class GlobalControllerExceptionHandler {
 
     @ExceptionHandler(value = Exception.class)
     @ResponseBody
-    public ResponseEntity<Object> errorHandler(Exception e) throws Exception {
+    public ResponseEntity<Object> errorHandler(Exception e) {
         log.error(e.getMessage(), e);
         ErrorResBody errorResBody = new ErrorResBody();
         HttpStatus httpStatus = null;
         if (e instanceof BusinessException) {
             httpStatus = HttpStatus.BAD_REQUEST;
-            errorResBody.setSource(Constants.SOURCE);
             errorResBody.setCode(((BusinessException) e).getCode());
             errorResBody.setMessage(e.getMessage());
             errorResBody.setDetail(((BusinessException) e).getDetail());
         } else {
             httpStatus = HttpStatus.BAD_REQUEST;
-            errorResBody.setSource(Constants.SOURCE);
             errorResBody.setMessage(Constants.UNEXPECTED_ERROR + ": " + e.getMessage());
         }
 
